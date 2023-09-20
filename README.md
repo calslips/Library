@@ -11,6 +11,6 @@ testing at the end of the project.
 
 # User Stories
 - users can add new books
-- users can search for books (title or author)
+- users can search for books (title or user)
 - users can sign out the book
 - users can delete their accounts
