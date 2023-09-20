@@ -19,4 +19,8 @@ public class UserService {
     public void deleteUser(String username) {
         userDAO.deleteUser(username);
     }
+
+    public boolean checkUser(String username) {
+        return userDAO.userExists(username);
+    }
 }

@@ -82,7 +82,9 @@ public class Application {
                 String author = sc.nextLine();
                 System.out.println("enter your user id");
                 int userId = Integer.parseInt(sc.nextLine());
-                bookService.signOutBook(title, author, userId);
+                System.out.println("enter the book id");
+                int bookId = Integer.parseInt(sc.nextLine());
+                bookService.signOutBook(title, author, userId, bookId);
 
             }else if(choice == 5){
                 // return book
@@ -92,7 +94,9 @@ public class Application {
                 String author = sc.nextLine();
                 System.out.println("enter your user id");
                 int userId = Integer.parseInt(sc.nextLine());
-                bookService.returnBook(title, author, userId);
+                System.out.println("enter the book id");
+                int bookId = Integer.parseInt(sc.nextLine());
+                bookService.returnBook(title, author, bookId);
 
 //                System.out.println("enter year");
 //                int yearInput = Integer.parseInt(sc.nextLine());
@@ -106,6 +110,7 @@ public class Application {
 
                 while (userService.checkUser(username)) {
                     System.out.println("Username taken, choose another one.");
+                    username = sc.nextLine();
                 }
                 User newUser = new User(username);
                 userService.createUser(newUser);

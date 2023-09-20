@@ -16,6 +16,13 @@ public class Book extends Object{
         signedOutBy = 0;
     }
 
+    public Book(int bookId, String author, String title, int signedOutBy){
+        this.bookId = bookId;
+        this.author = author;
+        this.title = title;
+        this.signedOutBy = signedOutBy;
+    }
+
 //    public Book(int bookId, String title, int authorFkey) {
 //        this.bookId = bookId;
 //        this.title = title;
@@ -44,6 +51,14 @@ public class Book extends Object{
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public int getSignedOutBy() {
+        return signedOutBy;
+    }
+
+    public void setSignedOutBy(int userId) {
+        this.signedOutBy = userId;
     }
 
 //    public int getYearMade() {

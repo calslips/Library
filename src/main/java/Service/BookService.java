@@ -12,10 +12,10 @@ import java.util.List;
  * (ie, an application that doesn't require any complicated programming logic - just a path from user input to data layer)
  */
 public class BookService {
-    private BookDAO BookDAO;
+    private BookDAO bookDAO;
     private UserService userService;
 
-    public BookService(BookDAO bookDAO, UserService userService){
+    public BookService(BookDAO bookDAO){
         this.bookDAO = bookDAO;
         this.userService = userService;
     }
@@ -51,12 +51,12 @@ public class BookService {
         return bookList;
     }
 
-    public void signOutBook(String title, String author, int userId) {
-        bookDAO.updateSignedOutBy(title, author, userId);
+    public void signOutBook(String title, String author, int userId, int bookId) {
+        bookDAO.updateSignedOutBy(title, author, userId, bookId);
     }
 
-    public void returnBook(String title, String author, int userId) {
-        bookDAO.updateReturnBook(title, author, userId);
+    public void returnBook(String title, String author, int bookId) {
+        bookDAO.updateReturnBook(title, author, bookId);
     }
 
 //    public void updatePainting(Book p){

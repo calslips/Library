@@ -4,7 +4,7 @@ import Model.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-//import java.sql.ResultSet;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UserDAO {
@@ -40,6 +40,20 @@ public class UserDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public Boolean userExists(String username) {
+        try {
+            PreparedStatement ps = conn.prepareStatement("select username from user where username = ?");
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 //    /**
