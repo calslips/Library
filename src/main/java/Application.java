@@ -7,6 +7,7 @@ import Controller.Controller;
 //import Service.PaintingService;
 import DAO.UserDAO;
 import DAO.BookDAO;
+import Model.User;
 import Service.UserService;
 import Service.BookService;
 import Model.Book;
@@ -106,7 +107,8 @@ public class Application {
                 while (userService.checkUser(username)) {
                     System.out.println("Username taken, choose another one.");
                 }
-                userService.createUser(username);
+                User newUser = new User(username);
+                userService.createUser(newUser);
 
 
 //                System.out.println("enter year");

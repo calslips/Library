@@ -1,6 +1,7 @@
 package Service;
 
 import DAO.UserDAO;
+import Model.User;
 
 public class UserService {
     UserDAO userDAO;
@@ -11,8 +12,8 @@ public class UserService {
 //        return authorDAO.getAuthorIdByName(name);
 //    }
 
-    public void createUser(String username) {
-        userDAO.createUser(username);
+    public void createUser(User user) {
+        userDAO.createUser(user);
     }
 
     public void deleteUser(String username) {
