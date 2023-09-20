@@ -1,6 +1,6 @@
 package DAO;
 
-import Model.Painting;
+import Model.Book;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -29,7 +29,7 @@ public class PaintingDAO {
      * method that uses JDBC to send a insert statement to my database
      * @param p
      */
-    public void insertPainting(Painting p){
+    public void insertPainting(Book p){
         try{
 //            using preparedstatement's ? ? syntax prevents SQL injection
             PreparedStatement ps = conn.prepareStatement("insert into painting (painting_id, title, year_made, made_by) values (?, ?, ?, ?)");
@@ -50,8 +50,8 @@ public class PaintingDAO {
      * @param author
      * @return
      */
-    public List<Painting> queryPaintingsByAuthor(String author){
-        List<Painting> paintingList = new ArrayList<>();
+    public List<Book> queryPaintingsByAuthor(String author){
+        List<Book> bookList = new ArrayList<>();
         try{
             PreparedStatement ps = conn.prepareStatement("select * from painting inner join author on painting.made_by = author.author_id where name = ?");
             ps.setString(1, author);
@@ -61,13 +61,13 @@ public class PaintingDAO {
                 String dbTitle = rs.getString("title");
                 int yearMade = rs.getInt("year_made");
                 int paintingId = rs.getInt("painting_id");
-                Painting dbPainting = new Painting(paintingId, dbTitle, dbAuthor, yearMade);
-                paintingList.add(dbPainting);
+                Book dbBook = new Book(paintingId, dbTitle, dbAuthor, yearMade);
+                bookList.add(dbBook);
             }
         }catch(SQLException e){
             e.printStackTrace();
         }
-        return paintingList;
+        return bookList;
     }
 
     /**
@@ -76,7 +76,7 @@ public class PaintingDAO {
      * @param
      * @return
      */
-    public Painting queryPaintingsByTitleAndAuthor(String title, int author){
+    public Book queryPaintingsByTitleAndAuthor(String title, int author){
         try{
             PreparedStatement ps = conn.prepareStatement("select * from painting where title = ? and made_by = ?");
             ps.setString(1, title);
@@ -85,8 +85,8 @@ public class PaintingDAO {
             if(rs.next()){
                 String dbTitle = rs.getString("title");
                 String dbAuthor = rs.getString("author");
-                Painting dbPainting = new Painting();
-                return dbPainting;
+                Book dbBook = new Book();
+                return dbBook;
             }
         }catch(SQLException e){
             e.printStackTrace();
@@ -94,7 +94,7 @@ public class PaintingDAO {
         return null;
     }
 
-    public void updatePainting(Painting p){
+    public void updatePainting(Book p){
         try{
             PreparedStatement ps = conn.prepareStatement("update painting set author = ? where title = ?");
 //            ps.setString(1, p.getAuthor());
@@ -115,36 +115,36 @@ public class PaintingDAO {
         }
     }
 
-    public List<Painting> queryPaintingByYear(int year) {
-        List<Painting> paintingList = new ArrayList<>();
+    public List<Book> queryPaintingByYear(int year) {
+        List<Book> bookList = new ArrayList<>();
         try{
             PreparedStatement ps = conn.prepareStatement("select * from painting where year_made = ? order by year_made asc");
             ps.setInt(1, year);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
-                Painting dbPainting = new Painting(rs.getInt("painting_id"), rs.getString("title"),
+                Book dbBook = new Book(rs.getInt("painting_id"), rs.getString("title"),
                         rs.getInt("made_by"), rs.getInt("year_made"));
-                paintingList.add(dbPainting);
+                bookList.add(dbBook);
             }
         }catch(SQLException e){
             e.printStackTrace();
         }
-        return paintingList;
+        return bookList;
     }
-    public List<Painting> queryPaintingBeforeYear(int year) {
-        List<Painting> paintingList = new ArrayList<>();
+    public List<Book> queryPaintingBeforeYear(int year) {
+        List<Book> bookList = new ArrayList<>();
         try{
             PreparedStatement ps = conn.prepareStatement("select * from painting where year_made < ?");
             ps.setInt(1, year);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
-                Painting dbPainting = new Painting(rs.getInt("painting_id"), rs.getString("title"),
+                Book dbBook = new Book(rs.getInt("painting_id"), rs.getString("title"),
                         rs.getInt("made_by"), rs.getInt("year_made"));
-                paintingList.add(dbPainting);
+                bookList.add(dbBook);
             }
         }catch(SQLException e){
             e.printStackTrace();
         }
-        return paintingList;
+        return bookList;
     }
 }
