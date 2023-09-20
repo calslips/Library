@@ -1,10 +1,15 @@
 import Controller.Controller;
-import DAO.AuthorDAO;
-import DAO.PaintingDAO;
-import Exceptions.PaintingAlreadyExistsException;
-import Model.Painting;
-import Service.AuthorService;
-import Service.PaintingService;
+//import DAO.AuthorDAO;
+//import DAO.PaintingDAO;
+//import Exceptions.PaintingAlreadyExistsException;
+//import Model.Painting;
+//import Service.AuthorService;
+//import Service.PaintingService;
+import DAO.UserDAO;
+import DAO.BookDAO;
+import Service.UserService;
+import Service.BookService;
+import Model.Book;
 import Util.ConnectionSingleton;
 
 import java.sql.Connection;
@@ -14,68 +19,111 @@ import java.util.Scanner;
 public class Application {
     public static void main(String[] args) {
         Connection conn = ConnectionSingleton.getConnection();
-        PaintingDAO paintingDAO = new PaintingDAO(conn);
-        AuthorDAO authorDAO = new AuthorDAO(conn);
-        AuthorService authorService = new AuthorService(authorDAO);
-        PaintingService paintingService = new PaintingService(paintingDAO, authorService);
+        UserDAO userDAO = new UserDAO(conn);
+        BookDAO bookDAO = new BookDAO(conn);
+        UserService userService = new UserService(userDAO);
+        BookService bookService = new BookService(bookDAO);
+
+//        PaintingDAO paintingDAO = new PaintingDAO(conn);
+//        AuthorDAO authorDAO = new AuthorDAO(conn);
+//        AuthorService authorService = new AuthorService(authorDAO);
+//        PaintingService paintingService = new PaintingService(paintingDAO, authorService);
 
 
         Scanner sc = new Scanner(System.in);
         while(true){
-            System.out.println("1: add new painting 2: get paintings by author 3: update the author of painting " +
-                    "4: delete painting by title 5: search paintings by year 6: search paintings before year");
+            System.out.println("1: add new book 2: search for book by author 3: search for book by title " +
+                    "4: sign out book " +
+                    "5: return book " +
+                    "6: create account " +
+                    "7: delete account");
             int choice = Integer.parseInt(sc.nextLine());
             if(choice == 1){
-                System.out.println("enter painting id");
-                int paintingId = Integer.parseInt(sc.nextLine());
-                System.out.println("enter title");
-                String title = sc.nextLine();
-                System.out.println("enter author");
+                // adding new book
+                System.out.println("enter author name");
                 String author = sc.nextLine();
-                System.out.println("enter year made");
-                int yearMade = Integer.parseInt(sc.nextLine());
-                Painting p = new Painting(paintingId, title, 0, yearMade);
+                System.out.println("enter book title");
+                String title = sc.nextLine();
 
-                try{
-                    paintingService.savePainting(p, author);
-                }catch(PaintingAlreadyExistsException e){
-                    System.out.println("That painting already exists!");
-                }
+                Book b = new Book(author, title);
+
+//                try{
+//                    paintingService.savePainting(p, author);
+//                }catch(PaintingAlreadyExistsException e){
+//                    System.out.println("That painting already exists!");
+//                }
 
 
             }else if(choice == 2){
-
+                // search for book by author
                 System.out.println("enter author");
                 String author = sc.nextLine();
-                List<Painting> paintingList = paintingService.getPaintingsByAuthor(author);
-                System.out.println(paintingList);
+                List<Book> bookList = bookService.getBooksByAuthor(author);
+                System.out.println(bookList);
 
             }else if(choice ==3) {
+                // search for book by title
+                System.out.println("enter title");
+                String title = sc.nextLine();
 
+                List<Book> bookList = bookService.getBooksByTitle(title);
+                System.out.println(bookList);
+
+//                Painting p = new Painting();
+//                paintingService.updatePainting(p);
+
+            }else if(choice == 4){
+                // sign out book (update signed out by userId)
                 System.out.println("enter title");
                 String title = sc.nextLine();
                 System.out.println("enter author");
                 String author = sc.nextLine();
-                Painting p = new Painting();
-                paintingService.updatePainting(p);
-
-            }else if(choice == 4){
-
-                System.out.println("enter title");
-                String title = sc.nextLine();
-                paintingService.deletePainting(title);
+                System.out.println("enter your user id");
+                int userId = Integer.parseInt(sc.nextLine());
+                bookService.signOutBook(title, author, userId);
 
             }else if(choice == 5){
-                System.out.println("enter year");
-                int yearInput = Integer.parseInt(sc.nextLine());
-                List<Painting> paintingList = paintingService.getPaintingsFromYear(yearInput);
-                System.out.println(paintingList);
+                // return book
+                System.out.println("enter title");
+                String title = sc.nextLine();
+                System.out.println("enter author");
+                String author = sc.nextLine();
+                System.out.println("enter your user id");
+                int userId = Integer.parseInt(sc.nextLine());
+                bookService.returnBook(title, author, userId);
+
+//                System.out.println("enter year");
+//                int yearInput = Integer.parseInt(sc.nextLine());
+//                List<Painting> paintingList = paintingService.getPaintingsFromYear(yearInput);
+//                System.out.println(paintingList);
 
             }else if(choice == 6){
-                System.out.println("enter year");
-                int yearInput = Integer.parseInt(sc.nextLine());
-                List<Painting> paintingList = paintingService.getPaintingsBeforeYear(yearInput);
-                System.out.println(paintingList);
+                // create user account
+                System.out.println("enter username");
+                String username = sc.nextLine();
+
+                while (userService.checkUser(username)) {
+                    System.out.println("Username taken, choose another one.");
+                }
+                userService.createUser(username);
+
+
+//                System.out.println("enter year");
+//                int yearInput = Integer.parseInt(sc.nextLine());
+//                List<Painting> paintingList = paintingService.getPaintingsBeforeYear(yearInput);
+//                System.out.println(paintingList);
+
+            }else if(choice == 7){
+                // delete user account
+                System.out.println("enter username");
+                String username = sc.nextLine();
+                userService.deleteUser(username);
+
+
+//                System.out.println("enter year");
+//                int yearInput = Integer.parseInt(sc.nextLine());
+//                List<Painting> paintingList = paintingService.getPaintingsBeforeYear(yearInput);
+//                System.out.println(paintingList);
 
             }else{
                 System.out.println("invalid choice");
