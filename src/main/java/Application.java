@@ -46,6 +46,7 @@ public class Application {
                 String title = sc.nextLine();
 
                 Book b = new Book(author, title);
+                bookService.addBook(b);
 
 //                try{
 //                    paintingService.savePainting(p, author);
