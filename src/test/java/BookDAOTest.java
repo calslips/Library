@@ -54,6 +54,20 @@ public class BookDAOTest {
         Assert.assertEquals(expected, actual);
     }
 
+    @Test
+    public void testReturnBook() {
+        User user = new User(25, "testuser");
+        userDAO.createUser(user);
+
+        Book testBook = new Book(45, "test author", "test title", 25);
+        bookDAO.insertBook(testBook);
+        bookDAO.updateReturnBook(testBook.getTitle(), testBook.getAuthor(), testBook.getBookId());
+        Book actualBook = bookDAO.queryBooksByAuthor("test author").get(0);
+        int expected = 0;
+        int actual = actualBook.getSignedOutBy();
+        Assert.assertEquals(expected, actual);
+    }
+
 
 
     /**

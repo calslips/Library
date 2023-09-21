@@ -115,9 +115,9 @@ public class BookDAO {
         try{
             PreparedStatement ps = conn.prepareStatement("update books set signedOutBy = null where title = ? and author = ? and bookId = ?");
 //            ps.setInt(1, userId);
-            ps.setString(2, title);
-            ps.setString(3, author);
-            ps.setInt(4, bookId);
+            ps.setString(1, title);
+            ps.setString(2, author);
+            ps.setInt(3, bookId);
             ps.executeUpdate();
         }catch(SQLException e){
             e.printStackTrace();
