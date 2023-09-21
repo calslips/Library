@@ -32,14 +32,15 @@ public class Application {
 
 
         Scanner sc = new Scanner(System.in);
-        while(true){
+        while(true) {
             System.out.println("1: add new book 2: search for book by author 3: search for book by title " +
                     "4: sign out book " +
                     "5: return book " +
                     "6: create account " +
-                    "7: delete account");
+                    "7: delete account" +
+                    "8: get users list");
             int choice = Integer.parseInt(sc.nextLine());
-            if(choice == 1){
+            if (choice == 1) {
                 // adding new book
                 System.out.println("enter author name");
                 String author = sc.nextLine();
@@ -56,14 +57,14 @@ public class Application {
 //                }
 
 
-            }else if(choice == 2){
+            } else if (choice == 2) {
                 // search for book by author
                 System.out.println("enter author");
                 String author = sc.nextLine();
                 List<Book> bookList = bookService.getBooksByAuthor(author);
                 System.out.println(bookList);
 
-            }else if(choice ==3) {
+            } else if (choice == 3) {
                 // search for book by title
                 System.out.println("enter title");
                 String title = sc.nextLine();
@@ -74,7 +75,7 @@ public class Application {
 //                Painting p = new Painting();
 //                paintingService.updatePainting(p);
 
-            }else if(choice == 4){
+            } else if (choice == 4) {
                 // sign out book (update signed out by userId)
                 System.out.println("enter title");
                 String title = sc.nextLine();
@@ -86,7 +87,7 @@ public class Application {
                 int bookId = Integer.parseInt(sc.nextLine());
                 bookService.signOutBook(title, author, userId, bookId);
 
-            }else if(choice == 5){
+            } else if (choice == 5) {
                 // return book
                 System.out.println("enter title");
                 String title = sc.nextLine();
@@ -103,7 +104,7 @@ public class Application {
 //                List<Painting> paintingList = paintingService.getPaintingsFromYear(yearInput);
 //                System.out.println(paintingList);
 
-            }else if(choice == 6){
+            } else if (choice == 6) {
                 // create user account
                 System.out.println("enter username");
                 String username = sc.nextLine();
@@ -121,7 +122,7 @@ public class Application {
 //                List<Painting> paintingList = paintingService.getPaintingsBeforeYear(yearInput);
 //                System.out.println(paintingList);
 
-            }else if(choice == 7){
+            } else if (choice == 7) {
                 // delete user account
                 System.out.println("enter username");
                 String username = sc.nextLine();
@@ -133,6 +134,9 @@ public class Application {
 //                List<Painting> paintingList = paintingService.getPaintingsBeforeYear(yearInput);
 //                System.out.println(paintingList);
 
+            } else if (choice == 8) {
+                List<User> users = userService.getAllUsers();
+                System.out.println(users);
             }else{
                 System.out.println("invalid choice");
             }

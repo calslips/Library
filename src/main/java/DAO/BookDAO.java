@@ -32,11 +32,11 @@ public class BookDAO {
     public void insertBook(Book b){
         try{
 //            using preparedstatement's ? ? syntax prevents SQL injection
-            PreparedStatement ps = conn.prepareStatement("insert into book (bookId, author, title, signedOutBy) values (?, ?, ?, ?)");
+            PreparedStatement ps = conn.prepareStatement("insert into books (bookId, author, title, signedOutBy) values (?, ?, ?, null)");
             ps.setInt(1, b.getBookId());
             ps.setString(2, b.getAuthor());
             ps.setString(3, b.getTitle());
-            ps.setInt(4, b.getSignedOutBy());
+//            ps.setNull(4, null);
             ps.executeUpdate();
 
         }catch(SQLException e){
@@ -53,7 +53,7 @@ public class BookDAO {
     public List<Book> queryBooksByAuthor(String author){
         List<Book> bookList = new ArrayList<>();
         try{
-            PreparedStatement ps = conn.prepareStatement("select * from book where author = ?");
+            PreparedStatement ps = conn.prepareStatement("select * from books where author = ?");
             ps.setString(1, author);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
@@ -80,7 +80,7 @@ public class BookDAO {
     public List<Book> queryBooksByTitle(String title){
         List<Book> bookList = new ArrayList<>();
         try{
-            PreparedStatement ps = conn.prepareStatement("select * from book where title = ?");
+            PreparedStatement ps = conn.prepareStatement("select * from books where title = ?");
             ps.setString(1, title);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
@@ -100,7 +100,7 @@ public class BookDAO {
 
     public void updateSignedOutBy(String title, String author, int userId, int bookId){
         try{
-            PreparedStatement ps = conn.prepareStatement("update book set signedOutBy = ? where title = ? and author = ? and bookId = ?");
+            PreparedStatement ps = conn.prepareStatement("update books set signedOutBy = ? where title = ? and author = ? and bookId = ?");
             ps.setInt(1, userId);
             ps.setString(2, title);
             ps.setString(3, author);
@@ -113,7 +113,7 @@ public class BookDAO {
 
     public void updateReturnBook(String title, String author, int bookId){
         try{
-            PreparedStatement ps = conn.prepareStatement("update book set signedOutBy = null where title = ? and author = ? and bookId = ?");
+            PreparedStatement ps = conn.prepareStatement("update books set signedOutBy = null where title = ? and author = ? and bookId = ?");
 //            ps.setInt(1, userId);
             ps.setString(2, title);
             ps.setString(3, author);
@@ -124,16 +124,16 @@ public class BookDAO {
         }
     }
 
-    public void updatePainting(Book p){
-        try{
-            PreparedStatement ps = conn.prepareStatement("update painting set author = ? where title = ?");
-//            ps.setString(1, p.getAuthor());
-            ps.setString(2, p.getTitle());
-            ps.executeUpdate();
-        }catch(SQLException e){
-            e.printStackTrace();
-        }
-    }
+//    public void updatePainting(Book p){
+//        try{
+//            PreparedStatement ps = conn.prepareStatement("update painting set author = ? where title = ?");
+////            ps.setString(1, p.getAuthor());
+//            ps.setString(2, p.getTitle());
+//            ps.executeUpdate();
+//        }catch(SQLException e){
+//            e.printStackTrace();
+//        }
+//    }
 
 //    /**
 //     * return a painting based off of a match in title and author, if no such match occurs in the database,

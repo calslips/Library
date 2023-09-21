@@ -2,6 +2,7 @@ package Service;
 
 import DAO.UserDAO;
 import Model.User;
+import java.util.List;
 
 public class UserService {
     UserDAO userDAO;
@@ -22,5 +23,9 @@ public class UserService {
 
     public boolean checkUser(String username) {
         return userDAO.userExists(username);
+    }
+
+    public List getAllUsers() {
+        return userDAO.getAllUsers();
     }
 }

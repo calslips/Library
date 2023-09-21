@@ -1,11 +1,14 @@
 package DAO;
 
+import Model.Book;
 import Model.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserDAO {
     Connection conn;
@@ -19,7 +22,7 @@ public class UserDAO {
      */
     public void createUser(User user) {
         try {
-            PreparedStatement ps = conn.prepareStatement("insert into user (userId, username) values (?, ?)");
+            PreparedStatement ps = conn.prepareStatement("insert into users (userId, username) values (?, ?)");
             ps.setInt(1, user.getUserId());
             ps.setString(2, user.getUsername());
             ps.executeUpdate();
@@ -34,7 +37,7 @@ public class UserDAO {
      */
     public void deleteUser(String username) {
         try {
-            PreparedStatement ps = conn.prepareStatement("delete from user where username = ?");
+            PreparedStatement ps = conn.prepareStatement("delete from users where username = ?");
             ps.setString(1, username);
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -44,7 +47,7 @@ public class UserDAO {
 
     public Boolean userExists(String username) {
         try {
-            PreparedStatement ps = conn.prepareStatement("select username from user where username = ?");
+            PreparedStatement ps = conn.prepareStatement("select * from users where username = ?");
             ps.setString(1, username);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -54,6 +57,24 @@ public class UserDAO {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public List getAllUsers() {
+        List<User> userList = new ArrayList<>();
+        try{
+            PreparedStatement ps = conn.prepareStatement("select * from users");
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                int dbUserId = rs.getInt("userId");
+                String dbUsername = rs.getString("username");
+
+                User dbUser = new User(dbUserId, dbUsername);
+                userList.add(dbUser);
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return userList;
     }
 
 //    /**
