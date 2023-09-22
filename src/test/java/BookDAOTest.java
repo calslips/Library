@@ -47,7 +47,7 @@ public class BookDAOTest {
 
         Book testBook = new Book(43, "test author", "test title", 22);
         bookDAO.insertBook(testBook);
-        bookDAO.updateSignedOutBy(testBook.getTitle(), testBook.getAuthor(), testBook.getSignedOutBy(), testBook.getBookId());
+        bookDAO.updateSignedOutBy(testBook.getBookId(), testBook.getSignedOutBy());
         Book actualBook = bookDAO.queryBooksByAuthor("test author").get(0);
         int expected = 22;
         int actual = actualBook.getSignedOutBy();
@@ -61,7 +61,7 @@ public class BookDAOTest {
 
         Book testBook = new Book(45, "test author", "test title", 25);
         bookDAO.insertBook(testBook);
-        bookDAO.updateReturnBook(testBook.getTitle(), testBook.getAuthor(), testBook.getBookId());
+        bookDAO.updateReturnBook(testBook.getBookId());
         Book actualBook = bookDAO.queryBooksByAuthor("test author").get(0);
         int expected = 0;
         int actual = actualBook.getSignedOutBy();
