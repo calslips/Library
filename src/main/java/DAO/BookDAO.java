@@ -126,26 +126,24 @@ public class BookDAO {
         return bookList;
     }
 
-    public void updateSignedOutBy(String title, String author, int userId, int bookId){
+    public void updateSignedOutBy(int bookId, int userId){
         try{
-            PreparedStatement ps = conn.prepareStatement("update books set signedOutBy = ? where title = ? and author = ? and bookId = ?");
+            PreparedStatement ps = conn.prepareStatement("update books set signedOutBy = ? where bookId = ?");
             ps.setInt(1, userId);
-            ps.setString(2, title);
-            ps.setString(3, author);
-            ps.setInt(4, bookId);
+            ps.setInt(2, bookId);
             ps.executeUpdate();
         }catch(SQLException e){
             e.printStackTrace();
         }
     }
 
-    public void updateReturnBook(String title, String author, int bookId){
+    public void updateReturnBook(int bookId){
         try{
-            PreparedStatement ps = conn.prepareStatement("update books set signedOutBy = null where title = ? and author = ? and bookId = ?");
+            PreparedStatement ps = conn.prepareStatement("update books set signedOutBy = null where bookId = ?");
 //            ps.setInt(1, userId);
-            ps.setString(1, title);
-            ps.setString(2, author);
-            ps.setInt(3, bookId);
+//            ps.setString(1, title);
+//            ps.setString(2, author);
+            ps.setInt(1, bookId);
             ps.executeUpdate();
         }catch(SQLException e){
             e.printStackTrace();

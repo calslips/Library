@@ -11,6 +11,7 @@ import Model.User;
 
 
 public class Controller {
+    ObjectMapper om = new ObjectMapper();
     BookService bookService;
     UserService userService;
 
@@ -25,6 +26,8 @@ public class Controller {
         app.get("users", this::getAllUsersHandler);
         app.post("books", this::postBooksHandler);
         app.post("users", this::postUsersHandler);
+        app.put("books/{id}/signoutbook", this::putSignoutBooksHandler);
+        app.put("books/{id}/returnbook", this::putReturnBooksHandler);
         return app;
     }
 
@@ -64,7 +67,6 @@ public class Controller {
     }
 
     private void postUsersHandler(Context context){
-        ObjectMapper om = new ObjectMapper();
         try {
             User user = om.readValue(context.body(), User.class);
             userService.createUser(user);
@@ -73,5 +75,22 @@ public class Controller {
             e.printStackTrace();
             context.status(400);
         }
+    }
+
+    private void putSignoutBooksHandler(Context context) {
+        try {
+            User user = om.readValue(context.body(), User.class);
+            int userId = user.getUserId();
+            int bookId = Integer.parseInt(context.pathParam("id"));
+            bookService.signOutBook(bookId, userId);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            context.status(400);
+        }
+    }
+
+    private void putReturnBooksHandler(Context context) {
+        int bookId = Integer.parseInt(context.pathParam("id"));
+        bookService.returnBook(bookId);
     }
 }

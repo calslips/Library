@@ -63,12 +63,12 @@ public class BookService {
         return bookList;
     }
 
-    public void signOutBook(String title, String author, int userId, int bookId) {
-        bookDAO.updateSignedOutBy(title, author, userId, bookId);
+    public void signOutBook(int bookId, int userId) {
+        bookDAO.updateSignedOutBy(bookId, userId);
     }
 
-    public void returnBook(String title, String author, int bookId) {
-        bookDAO.updateReturnBook(title, author, bookId);
+    public void returnBook(int bookId) {
+        bookDAO.updateReturnBook(bookId);
     }
 
     public List<Book> getAllBooks(){
