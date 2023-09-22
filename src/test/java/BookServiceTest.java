@@ -1,12 +1,16 @@
 import DAO.BookDAO;
 import DAO.UserDAO;
+import Exceptions.BookSignedOutException;
 import Model.Book;
 import Model.User;
 import Service.BookService;
 import Service.UserService;
 import Util.ConnectionSingleton;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Rule;
+import org.junit.rules.ExpectedException;
 import org.mockito.Mockito;
 
 import java.sql.Connection;
@@ -16,20 +20,23 @@ public class BookServiceTest {
     BookDAO mockBookDAO;
     UserService mockUserService;
     BookService mockBookService;
+    UserDAO realUserDAO;
     BookDAO realBookDAO;
     UserService realUserService;
-    BookService bookService;
+    BookService realBookService;
     BookService bookService2;
     @Before
     public void setUp(){
         mockBookDAO = Mockito.mock(BookDAO.class);
         mockUserService = Mockito.mock(UserService.class);
-        bookService = new BookService(mockBookDAO);
+        mockBookService = new BookService(mockBookDAO);
         mockBookService = Mockito.mock(BookService.class);
         conn = ConnectionSingleton.getConnection();
         ConnectionSingleton.resetTestDatabase();
+        realUserDAO = new UserDAO(conn);
         realBookDAO = new BookDAO(conn);
-        realUserService = new UserService(new UserDAO(conn));
+        realUserService = new UserService(realUserDAO);
+        realBookService = new BookService(realBookDAO);
         bookService2 = new BookService(realBookDAO);
     }
 
@@ -51,6 +58,21 @@ public class BookServiceTest {
      //   mockBookService.doAction(true);
         mockBookService.addBook(testBook);
         Mockito.verify(mockBookService).addBook(Mockito.any());
+    }
+
+    @Test
+    public void signOutBookUnsuccessfulTest() throws BookSignedOutException {
+        Book testBook = new Book("testAuthor", "testTitle");
+        User signedOutUser = new User("signedOut");
+        User notSignedOutUser = new User("notSignedOut");
+        realBookService.addBook(testBook);
+        realUserService.createUser(signedOutUser);
+        realUserService.createUser(notSignedOutUser);
+        realBookService.signOutBook(testBook.getBookId(), signedOutUser.getUserId());
+
+        Assert.assertThrows(BookSignedOutException.class, () -> {
+            realBookService.signOutBook(testBook.getBookId(), notSignedOutUser.getUserId());
+        });
     }
 }
 

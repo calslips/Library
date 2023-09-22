@@ -45,6 +45,16 @@ public class UserDAO {
         }
     }
 
+    public void deleteUser(int userId) {
+        try {
+            PreparedStatement ps = conn.prepareStatement("delete from users where userId = ?");
+            ps.setInt(1, userId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public Boolean userExists(String username) {
         try {
             PreparedStatement ps = conn.prepareStatement("select * from users where username = ?");

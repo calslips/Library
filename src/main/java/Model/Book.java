@@ -28,12 +28,6 @@ public class Book extends Object{
         this.signedOutBy = signedOutBy;
     }
 
-//    public Book(int bookId, String title, int authorFkey) {
-//        this.bookId = bookId;
-//        this.title = title;
-//        this.authorFkey = authorFkey;
-//    }
-
     public int getBookId() {
         return bookId;
     }

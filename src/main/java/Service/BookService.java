@@ -1,7 +1,7 @@
 package Service;
 
 import DAO.BookDAO;
-//import Exceptions.PaintingAlreadyExistsException;
+import Exceptions.BookSignedOutException;
 import Model.Book;
 
 import java.util.List;
@@ -63,8 +63,17 @@ public class BookService {
         return bookList;
     }
 
-    public void signOutBook(int bookId, int userId) {
-        bookDAO.updateSignedOutBy(bookId, userId);
+    public void signOutBook(int bookId, int userId) throws BookSignedOutException{
+        if (isSignedOut(bookId)) {
+            throw new BookSignedOutException();
+        } else {
+            bookDAO.updateSignedOutBy(bookId, userId);
+        }
+    }
+
+    public boolean isSignedOut(int bookId) {
+        Book b = bookDAO.queryBooksById(bookId);
+        return b.getSignedOutBy() != 0;
     }
 
     public void returnBook(int bookId) {

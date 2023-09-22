@@ -28,6 +28,10 @@ public class UserService {
         userDAO.deleteUser(username);
     }
 
+    public void deleteUser(int userId) {
+        userDAO.deleteUser(userId);
+    }
+
     public boolean checkUser(String username) {
         return userDAO.userExists(username);
     }

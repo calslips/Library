@@ -1,5 +1,6 @@
 package Controller;
 
+import Exceptions.BookSignedOutException;
 import Service.BookService;
 import Service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -28,6 +29,7 @@ public class Controller {
         app.post("users", this::postUsersHandler);
         app.put("books/{id}/signoutbook", this::putSignoutBooksHandler);
         app.put("books/{id}/returnbook", this::putReturnBooksHandler);
+        app.delete("users/{id}", this::deleteUserHandler);
         return app;
     }
 
@@ -86,11 +88,19 @@ public class Controller {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             context.status(400);
+        } catch (BookSignedOutException e) {
+            e.printStackTrace();
+            context.status(400);
         }
     }
 
     private void putReturnBooksHandler(Context context) {
         int bookId = Integer.parseInt(context.pathParam("id"));
         bookService.returnBook(bookId);
+    }
+
+    private void deleteUserHandler(Context context) {
+        int userId = Integer.parseInt(context.pathParam("id"));
+        userService.deleteUser(userId);
     }
 }
