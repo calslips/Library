@@ -3,14 +3,19 @@ package Model;
 import java.util.Objects;
 
 public class Book extends Object{
-    static int nextId = 1;
+   // static int nextId = 1;
     private int bookId;
     private String title;
     private String author;
     private int signedOutBy;
 
+    public Book(){
+    }
+
+
+
     public Book(String author, String title){
-        bookId = Book.nextId++;
+       // bookId = Book.nextId++;
         this.author = author;
         this.title = title;
         signedOutBy = 0;
@@ -33,9 +38,9 @@ public class Book extends Object{
         return bookId;
     }
 
-//    public void setPaintingId(int paintingId) {
-//        this.paintingId = paintingId;
-//    }
+    public void setBookId(int bookId) {
+       this.bookId = bookId;
+    }
 
     public String getTitle() {
         return title;
@@ -60,6 +65,7 @@ public class Book extends Object{
     public void setSignedOutBy(int userId) {
         this.signedOutBy = userId;
     }
+
 
 //    public int getYearMade() {
 //        return yearMade;

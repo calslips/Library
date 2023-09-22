@@ -124,6 +124,52 @@ public class BookDAO {
         }
     }
 
+    /**
+     * method that uses JDBC to parse the resultset of a query that selects all books
+     * into a java arraylist, and returns it
+     * @param
+     * @return
+     */
+    public List<Book> queryAllBooks(){
+        List<Book> bookList = new ArrayList<>();
+        try{
+            PreparedStatement ps = conn.prepareStatement("select * from books");
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                int dbBookId = rs.getInt("bookId");
+                String dbAuthor = rs.getString("author");
+                String dbTitle = rs.getString("title");
+                int dbSignedOutBy = rs.getInt("signedOutBy");
+
+                Book dbBook = new Book(dbBookId, dbAuthor, dbTitle, dbSignedOutBy);
+                bookList.add(dbBook);
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return bookList;
+    }
+
+    public Book queryBooksById(int bookId){
+        try{
+            PreparedStatement ps = conn.prepareStatement("select * from books where bookId = ?");
+            ps.setInt(1, bookId);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                int dbBookId = rs.getInt("bookId");
+                String dbAuthor = rs.getString("author");
+                String dbTitle = rs.getString("title");
+                int dbSignedOutBy = rs.getInt("signedOutBy");
+
+                Book dbBook = new Book(dbBookId, dbAuthor, dbTitle, dbSignedOutBy);
+                return dbBook;
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 //    public void updatePainting(Book p){
 //        try{
 //            PreparedStatement ps = conn.prepareStatement("update painting set author = ? where title = ?");

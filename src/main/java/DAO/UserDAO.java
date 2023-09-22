@@ -59,6 +59,20 @@ public class UserDAO {
         return false;
     }
 
+    public Boolean userExists(int userId) {
+        try {
+            PreparedStatement ps = conn.prepareStatement("select * from users where userId = ?");
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public List getAllUsers() {
         List<User> userList = new ArrayList<>();
         try{

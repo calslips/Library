@@ -3,14 +3,17 @@ package Model;
 import java.util.Objects;
 
 public class User {
-    static int nextId = 1;
+  //  static int nextId = 1;
     private int userId;
     private String username;
 //    private int yearBorn;
 //    private String authorNationality;
 
+    public User(){
+    }
+
     public User(String username) {
-        userId = User.nextId++;
+     //   userId = User.nextId++;
         this.username = username;
     }
 
@@ -23,9 +26,9 @@ public class User {
         return userId;
     }
 
-//    public void setAuthorId(int authorId) {
-//        this.authorId = authorId;
-//    }
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 
     public String getUsername() {
         return username;

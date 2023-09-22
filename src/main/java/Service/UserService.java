@@ -14,6 +14,13 @@ public class UserService {
 //    }
 
     public void createUser(User user) {
+        int id = 0;
+
+        do{
+            id = (int) (Math.random() * Integer.MAX_VALUE);
+        }while(userDAO.userExists(id));
+
+        user.setUserId(id);
         userDAO.createUser(user);
     }
 
@@ -28,4 +35,5 @@ public class UserService {
     public List getAllUsers() {
         return userDAO.getAllUsers();
     }
+
 }

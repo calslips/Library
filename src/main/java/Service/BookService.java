@@ -25,6 +25,13 @@ public class BookService {
      * @param b
      */
     public void addBook(Book b) {
+        int id = 0;
+
+        do{
+            id = (int) (Math.random() * Integer.MAX_VALUE);
+        }while(bookDAO.queryBooksById(id) != null);
+
+        b.setBookId(id);
         bookDAO.insertBook(b);
 
 //        int authorId = authorService.getIdFromName(name);
@@ -57,6 +64,11 @@ public class BookService {
 
     public void returnBook(String title, String author, int bookId) {
         bookDAO.updateReturnBook(title, author, bookId);
+    }
+
+    public List<Book> getAllBooks(){
+        List<Book> bookList = bookDAO.queryAllBooks();
+        return bookList;
     }
 
 //    public void updatePainting(Book p){
