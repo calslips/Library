@@ -45,6 +45,34 @@ public class BookDAO {
     }
 
     /**
+     * method that uses JDBC to parse the resultset of a query that selects books with a matching title and author
+     * into a java arraylist, and returns it
+     * @param author
+     * @return
+     */
+    public List<Book> queryBooksByTitleAndAuthor(String title, String author){
+        List<Book> bookList = new ArrayList<>();
+        try{
+            PreparedStatement ps = conn.prepareStatement("select * from books where title = ? and author = ?");
+            ps.setString(1, title);
+            ps.setString(2, author);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                int dbBookId = rs.getInt("bookId");
+                String dbAuthor = rs.getString("author");
+                String dbTitle = rs.getString("title");
+                int dbSignedOutBy = rs.getInt("signedOutBy");
+
+                Book dbBook = new Book(dbBookId, dbAuthor, dbTitle, dbSignedOutBy);
+                bookList.add(dbBook);
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return bookList;
+    }
+
+    /**
      * method that uses JDBC to parse the resultset of a query that selects books with a matching author
      * into a java arraylist, and returns it
      * @param author

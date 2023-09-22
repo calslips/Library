@@ -48,6 +48,11 @@ public class BookService {
 //        }
     }
 
+    public List<Book> getBooksByTitleAndAuthor(String title, String author){
+        List<Book> bookList = bookDAO.queryBooksByTitleAndAuthor(title, author);
+        return bookList;
+    }
+
     public List<Book> getBooksByAuthor(String author){
         List<Book> bookList = bookDAO.queryBooksByAuthor(author);
         return bookList;
