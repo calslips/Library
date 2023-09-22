@@ -1,3 +1,60 @@
+import DAO.BookDAO;
+import DAO.UserDAO;
+import Model.Book;
+import Model.User;
+import Service.BookService;
+import Service.UserService;
+import Util.ConnectionSingleton;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mockito;
+
+import java.sql.Connection;
+
+public class BookServiceTest {
+    Connection conn;
+    BookDAO mockBookDAO;
+    UserService mockUserService;
+    BookService mockBookService;
+    BookDAO realBookDAO;
+    UserService realUserService;
+    BookService bookService;
+    BookService bookService2;
+    @Before
+    public void setUp(){
+        mockBookDAO = Mockito.mock(BookDAO.class);
+        mockUserService = Mockito.mock(UserService.class);
+        bookService = new BookService(mockBookDAO);
+        mockBookService = Mockito.mock(BookService.class);
+        conn = ConnectionSingleton.getConnection();
+        ConnectionSingleton.resetTestDatabase();
+        realBookDAO = new BookDAO(conn);
+        realUserService = new UserService(new UserDAO(conn));
+        bookService2 = new BookService(realBookDAO);
+    }
+
+    /**
+     //     * the paintingservice SHOULD allow us to save a painting when the paintingDAO can not find the painting
+     //     * already existing, and CAN find the author id based off of a name.
+     //     */
+    @Test
+    public void addBookSuccesfulTest () {
+        String expectedName = "testAuthor";
+        String expectedTitle = "testBook";
+        Book testBook = new Book(1, expectedName, expectedTitle, 0);
+        int expectedId = 1;
+    //    Mockito.when(mockBookDAO.insertBook(testBook)).thenReturn(null);
+       // Mockito.when(mockAuthorService.getIdFromName(expectedName)).thenReturn(5);
+ //       Mockito.doNothing().when(mockBookService).addBook(testBook);
+  //      paintingService.savePainting(testPainting, expectedName);
+//        verify that we did actually attempt an insert!
+     //   mockBookService.doAction(true);
+        mockBookService.addBook(testBook);
+        Mockito.verify(mockBookService).addBook(Mockito.any());
+    }
+}
+
+
 //import DAO.AuthorDAO;
 //import DAO.PaintingDAO;
 //import Exceptions.PaintingAlreadyExistsException;
