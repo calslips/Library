@@ -1,13 +1,18 @@
 package Service;
 
 import DAO.UserDAO;
+import DAO.BookDAO;
+import Exceptions.UserHasBooksSignedOut;
+import Model.Book;
 import Model.User;
 import java.util.List;
 
 public class UserService {
     UserDAO userDAO;
-    public UserService(UserDAO userDAO){
+    BookDAO bookDAO;
+    public UserService(UserDAO userDAO, BookDAO bookDAO){
         this.userDAO = userDAO;
+        this.bookDAO = bookDAO;
     }
 //    public int getIdFromName(String name){
 //        return authorDAO.getAuthorIdByName(name);
@@ -27,12 +32,31 @@ public class UserService {
         userDAO.createUser(user);
     }
 
-    public void deleteUser(String username) {
-        userDAO.deleteUser(username);
+//    public void deleteUser(String username) {
+//        userDAO.deleteUser(username);
+//    }
+
+    /**
+     * method calls DAO to delete user from database IF they do not have any books signed out
+     * otherwise throws exception
+     * @param userId
+     */
+    public void deleteUser(int userId) throws UserHasBooksSignedOut {
+        if (!hasBooksSignedOut(userId)) {
+            userDAO.deleteUser(userId);
+        } else {
+            throw new UserHasBooksSignedOut();
+        }
     }
 
-    public void deleteUser(int userId) {
-        userDAO.deleteUser(userId);
+    /**
+     * method verifies whether user has books signed out
+     * @param userId
+     * @return boolean
+     */
+    public boolean hasBooksSignedOut(int userId) {
+        List<Book> books = bookDAO.queryBooksSignedOutByUser(userId);
+        return books.size() > 0;
     }
 
     public boolean checkUser(String username) {

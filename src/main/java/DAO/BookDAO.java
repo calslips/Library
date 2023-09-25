@@ -126,6 +126,27 @@ public class BookDAO {
         return bookList;
     }
 
+    public List<Book> queryBooksSignedOutByUser(int userId) {
+        List<Book> bookList = new ArrayList<>();
+        try{
+            PreparedStatement ps = conn.prepareStatement("select * from books where signedOutBy = ?");
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                int dbBookId = rs.getInt("bookId");
+                String dbAuthor = rs.getString("author");
+                String dbTitle = rs.getString("title");
+                int dbSignedOutBy = rs.getInt("signedOutBy");
+
+                Book dbBook = new Book(dbBookId, dbAuthor, dbTitle, dbSignedOutBy);
+                bookList.add(dbBook);
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return bookList;
+    }
+
     public void updateSignedOutBy(int bookId, int userId){
         try{
             PreparedStatement ps = conn.prepareStatement("update books set signedOutBy = ? where bookId = ?");

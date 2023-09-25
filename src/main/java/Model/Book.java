@@ -21,6 +21,13 @@ public class Book extends Object{
         signedOutBy = 0;
     }
 
+    public Book(int bookId, String author, String title){
+        this.bookId = bookId;
+        this.author = author;
+        this.title = title;
+        signedOutBy = 0;
+    }
+
     public Book(int bookId, String author, String title, int signedOutBy){
         this.bookId = bookId;
         this.author = author;

@@ -22,7 +22,7 @@ public class Application {
         Connection conn = ConnectionSingleton.getConnection();
         UserDAO userDAO = new UserDAO(conn);
         BookDAO bookDAO = new BookDAO(conn);
-        UserService userService = new UserService(userDAO);
+        UserService userService = new UserService(userDAO, bookDAO);
         BookService bookService = new BookService(bookDAO);
         Controller controller = new Controller(bookService, userService);
         controller.getAPI().start();

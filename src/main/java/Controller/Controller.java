@@ -1,6 +1,7 @@
 package Controller;
 
 import Exceptions.BookSignedOutException;
+import Exceptions.UserHasBooksSignedOut;
 import Service.BookService;
 import Service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -99,8 +100,17 @@ public class Controller {
         bookService.returnBook(bookId);
     }
 
+    /**
+     * endpoint handler used to delete user account
+     * @param context
+     * */
     private void deleteUserHandler(Context context) {
-        int userId = Integer.parseInt(context.pathParam("id"));
-        userService.deleteUser(userId);
+        try {
+            int userId = Integer.parseInt(context.pathParam("id"));
+            userService.deleteUser(userId);
+        } catch (UserHasBooksSignedOut e) {
+            e.printStackTrace();
+            context.status(400);
+        }
     }
 }
