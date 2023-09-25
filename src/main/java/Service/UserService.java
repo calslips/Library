@@ -16,11 +16,14 @@ public class UserService {
     public void createUser(User user) {
         int id = 0;
 
-        do{
-            id = (int) (Math.random() * Integer.MAX_VALUE);
-        }while(userDAO.userExists(id));
+        // if user id is the default (0), replace it with a unique randomized id
+        if (user.getUserId() == id) {
+            do {
+                id = (int) (Math.random() * Integer.MAX_VALUE);
+            } while (userDAO.userExists(id));
 
-        user.setUserId(id);
+            user.setUserId(id);
+        }
         userDAO.createUser(user);
     }
 
