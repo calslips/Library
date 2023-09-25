@@ -1,4 +1,4 @@
 package Exceptions;
 
-public class UserHasBooksSignedOut extends Exception{
+public class UserHasBooksSignedOut extends RuntimeException{
 }

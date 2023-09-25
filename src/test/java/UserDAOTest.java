@@ -49,7 +49,8 @@ public class UserDAOTest {
      * test when user tries to delete their account with books signed out, exception is thrown
      * @throws UserHasBooksSignedOut
      */
-    @Test public void testDeleteUserFailsWhenBooksSignedOut() throws UserHasBooksSignedOut {
+    @Test
+    public void testDeleteUserFailsWhenBooksSignedOut() throws UserHasBooksSignedOut {
         User user = new User(44, "keepingBooks123");
         Book testBook = new Book(33, "testAuthor", "testTitle");
 
