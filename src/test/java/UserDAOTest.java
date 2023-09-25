@@ -1,5 +1,7 @@
 import DAO.UserDAO;
 import DAO.BookDAO;
+import Exceptions.BookSignedOutException;
+import Exceptions.UserHasBooksSignedOut;
 import Model.User;
 import Model.Book;
 import Util.ConnectionSingleton;
@@ -25,7 +27,7 @@ public class UserDAOTest {
         ConnectionSingleton.resetTestDatabase();
         bookDAO = new BookDAO(conn);
         userDAO = new UserDAO(conn);
-        userService = new UserService(userDAO);
+        userService = new UserService(userDAO, bookDAO);
     }
 
     @Test
@@ -43,5 +45,20 @@ public class UserDAOTest {
         Assert.assertFalse(userService.checkUser("testname"));
     }
 
+    /**
+     * test when user tries to delete their account with books signed out, exception is thrown
+     * @throws UserHasBooksSignedOut
+     */
+    @Test public void testDeleteUserFailsWhenBooksSignedOut() throws UserHasBooksSignedOut {
+        User user = new User(44, "keepingBooks123");
+        Book testBook = new Book(33, "testAuthor", "testTitle");
 
+        userDAO.createUser(user);
+        bookDAO.insertBook(testBook);
+        bookDAO.updateSignedOutBy(testBook.getBookId(), user.getUserId());
+
+        Assert.assertThrows(UserHasBooksSignedOut.class, () -> {
+            userService.deleteUser(user.getUserId());
+        });
+    }
 }
