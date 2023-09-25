@@ -27,11 +27,14 @@ public class BookService {
     public void addBook(Book b) {
         int id = 0;
 
-        do{
-            id = (int) (Math.random() * Integer.MAX_VALUE);
-        }while(bookDAO.queryBooksById(id) != null);
+        // if book id is the default (0), replace it with a unique randomized id
+        if (b.getBookId() == id) {
+            do {
+                id = (int) (Math.random() * Integer.MAX_VALUE);
+            } while (bookDAO.queryBooksById(id) != null);
 
-        b.setBookId(id);
+            b.setBookId(id);
+        }
         bookDAO.insertBook(b);
 
 //        int authorId = authorService.getIdFromName(name);
