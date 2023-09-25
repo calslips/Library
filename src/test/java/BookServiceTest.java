@@ -17,6 +17,7 @@ import java.sql.Connection;
 
 public class BookServiceTest {
     Connection conn;
+    UserDAO mockUserDAO;
     BookDAO mockBookDAO;
     UserService mockUserService;
     BookService mockBookService;
@@ -24,40 +25,41 @@ public class BookServiceTest {
     BookDAO realBookDAO;
     UserService realUserService;
     BookService realBookService;
-    BookService bookService2;
+
     @Before
     public void setUp(){
         mockBookDAO = Mockito.mock(BookDAO.class);
-        mockUserService = Mockito.mock(UserService.class);
         mockBookService = new BookService(mockBookDAO);
-        mockBookService = Mockito.mock(BookService.class);
+
+//        mockUserDAO = Mockito.mock(UserDAO.class);
+//        mockUserService = Mockito.mock(UserService.class);
+
         conn = ConnectionSingleton.getConnection();
         ConnectionSingleton.resetTestDatabase();
         realUserDAO = new UserDAO(conn);
         realBookDAO = new BookDAO(conn);
         realUserService = new UserService(realUserDAO);
         realBookService = new BookService(realBookDAO);
-        bookService2 = new BookService(realBookDAO);
     }
 
     /**
-     //     * the paintingservice SHOULD allow us to save a painting when the paintingDAO can not find the painting
-     //     * already existing, and CAN find the author id based off of a name.
-     //     */
+     * the bookService SHOULD allow us to save a book via the bookDAO
+     */
     @Test
-    public void addBookSuccesfulTest () {
-        String expectedName = "testAuthor";
-        String expectedTitle = "testBook";
-        Book testBook = new Book(1, expectedName, expectedTitle, 0);
-        int expectedId = 1;
-    //    Mockito.when(mockBookDAO.insertBook(testBook)).thenReturn(null);
-       // Mockito.when(mockAuthorService.getIdFromName(expectedName)).thenReturn(5);
- //       Mockito.doNothing().when(mockBookService).addBook(testBook);
-  //      paintingService.savePainting(testPainting, expectedName);
-//        verify that we did actually attempt an insert!
-     //   mockBookService.doAction(true);
+    public void addBookSuccesfulTestMocked () {
+        Book testBook = new Book(1, "testAuthor", "testBook", 0);
+
+        // insertBook method has a void return
+        // utilize doAnswer to mock the method call but return null
+        Mockito.doAnswer(invocationOnMock -> {
+            Object arg0 = invocationOnMock.getArgument(0);
+            Assert.assertEquals(testBook, arg0);
+            return null;
+        }).when(mockBookDAO).insertBook(Mockito.any(Book.class));
+
         mockBookService.addBook(testBook);
-        Mockito.verify(mockBookService).addBook(Mockito.any());
+
+        Mockito.verify(mockBookDAO).insertBook(Mockito.any());
     }
 
     @Test
