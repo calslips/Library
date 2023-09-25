@@ -62,11 +62,16 @@ public class BookServiceTest {
         Mockito.verify(mockBookDAO).insertBook(Mockito.any());
     }
 
+    /**
+     * the bookService should throw a BookSignedOutException when the user attempts
+     * to sign out a book that another user has already signed out
+     */
     @Test
-    public void signOutBookUnsuccessfulTest() throws BookSignedOutException {
+    public void signOutBookUnsuccessfulTestUnmocked() throws BookSignedOutException {
         Book testBook = new Book("testAuthor", "testTitle");
         User signedOutUser = new User("signedOut");
         User notSignedOutUser = new User("notSignedOut");
+
         realBookService.addBook(testBook);
         realUserService.createUser(signedOutUser);
         realUserService.createUser(notSignedOutUser);
