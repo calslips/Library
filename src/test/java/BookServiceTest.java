@@ -38,7 +38,7 @@ public class BookServiceTest {
         ConnectionSingleton.resetTestDatabase();
         realUserDAO = new UserDAO(conn);
         realBookDAO = new BookDAO(conn);
-        realUserService = new UserService(realUserDAO);
+        realUserService = new UserService(realUserDAO, realBookDAO);
         realBookService = new BookService(realBookDAO);
     }
 
