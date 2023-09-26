@@ -21,6 +21,23 @@ public class BookDAOTest {
         userDAO = new UserDAO(conn);
     }
 
+    /**
+     * Tests querying the database for books by title and author via bookDAO
+     */
+    @Test
+    public void testSearchBookByTitleAndAuthor() {
+        Book testBook = new Book("test author 1", "test title 1");
+        bookDAO.insertBook(testBook);
+        Book actualBook = bookDAO.queryBooksByTitleAndAuthor("test title 1", "test author 1").get(0);
+        String expectedAuthor = "test author 1";
+        String expectedTitle = "test title 1";
+        Assert.assertEquals(expectedAuthor, actualBook.getAuthor());
+        Assert.assertEquals(expectedTitle, actualBook.getTitle());
+    }
+
+    /**
+     * Tests querying the database for books by author via bookDAO
+     */
     @Test
     public void testSearchBookByAuthor() {
         Book testBook = new Book("test author 1", "test title 1");
@@ -30,6 +47,9 @@ public class BookDAOTest {
         Assert.assertEquals(expectedAuthor, actualBook.getAuthor());
     }
 
+    /**
+     * Tests querying the database for books by title via bookDAO
+     */
     @Test
     public void testSearchBookByTitle() {
         Book testBook = new Book("test author 2", "test title 2");
