@@ -75,10 +75,10 @@ public class BookServiceTest {
         realBookService.addBook(testBook);
         realUserService.createUser(signedOutUser);
         realUserService.createUser(notSignedOutUser);
-        realBookService.signOutBook(testBook.getBookId(), signedOutUser.getUserId());
+        realBookService.updateBookSignedOutBy(testBook.getBookId(), signedOutUser.getUserId());
 
         Assert.assertThrows(BookSignedOutException.class, () -> {
-            realBookService.signOutBook(testBook.getBookId(), notSignedOutUser.getUserId());
+            realBookService.updateBookSignedOutBy(testBook.getBookId(), notSignedOutUser.getUserId());
         });
     }
 }

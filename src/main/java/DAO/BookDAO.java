@@ -147,28 +147,48 @@ public class BookDAO {
         return bookList;
     }
 
-    public void updateSignedOutBy(int bookId, int userId){
+    /**
+     * Executes SQL statement to update book's signedOutBy property in the database to current user.
+     * When update is successful, returns updated book.
+     * Otherwise, returns null.
+     * @param book
+     * @param userId
+     * @return book or null
+     */
+    public Book updateSignedOutBy(Book book, int userId){
         try{
             PreparedStatement ps = conn.prepareStatement("update books set signedOutBy = ? where bookId = ?");
             ps.setInt(1, userId);
-            ps.setInt(2, bookId);
-            ps.executeUpdate();
+            ps.setInt(2, book.getBookId());
+            if (ps.executeUpdate() > 0) {
+                book.setSignedOutBy(userId);
+                return book;
+            }
         }catch(SQLException e){
             e.printStackTrace();
         }
+        return null;
     }
 
-    public void updateReturnBook(int bookId){
+    /**
+     * Executes SQL statement to update book's signedOutBy property in the database to null (no user).
+     * When update is successful, returns updated book.
+     * Otherwise, returns null.
+     * @param book
+     * @return book or null
+     */
+    public Book updateReturnBook(Book book){
         try{
             PreparedStatement ps = conn.prepareStatement("update books set signedOutBy = null where bookId = ?");
-//            ps.setInt(1, userId);
-//            ps.setString(1, title);
-//            ps.setString(2, author);
-            ps.setInt(1, bookId);
-            ps.executeUpdate();
+            ps.setInt(1, book.getBookId());
+            if (ps.executeUpdate() > 1) {
+                book.setSignedOutBy(0);
+                return book;
+            }
         }catch(SQLException e){
             e.printStackTrace();
         }
+        return null;
     }
 
     /**
@@ -216,82 +236,4 @@ public class BookDAO {
         }
         return null;
     }
-
-//    public void updatePainting(Book p){
-//        try{
-//            PreparedStatement ps = conn.prepareStatement("update painting set author = ? where title = ?");
-////            ps.setString(1, p.getAuthor());
-//            ps.setString(2, p.getTitle());
-//            ps.executeUpdate();
-//        }catch(SQLException e){
-//            e.printStackTrace();
-//        }
-//    }
-
-//    /**
-//     * return a painting based off of a match in title and author, if no such match occurs in the database,
-//     * return null.
-//     * @param
-//     * @return
-//     */
-//    public Book queryPaintingsByTitleAndAuthor(String title, int author){
-//        try{
-//            PreparedStatement ps = conn.prepareStatement("select * from painting where title = ? and made_by = ?");
-//            ps.setString(1, title);
-//            ps.setInt(2, author);
-//            ResultSet rs = ps.executeQuery();
-//            if(rs.next()){
-//                String dbTitle = rs.getString("title");
-//                String dbAuthor = rs.getString("author");
-//                Book dbBook = new Book();
-//                return dbBook;
-//            }
-//        }catch(SQLException e){
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
-//
-//    public void deletePainting(String title){
-//        try{
-//            PreparedStatement ps = conn.prepareStatement("delete painting where title = ?");
-//            ps.setString(1, title);
-//            ps.executeUpdate();
-//        }catch(SQLException e){
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    public List<Book> queryPaintingByYear(int year) {
-//        List<Book> bookList = new ArrayList<>();
-//        try{
-//            PreparedStatement ps = conn.prepareStatement("select * from painting where year_made = ? order by year_made asc");
-//            ps.setInt(1, year);
-//            ResultSet rs = ps.executeQuery();
-//            while(rs.next()){
-//                Book dbBook = new Book(rs.getInt("painting_id"), rs.getString("title"),
-//                        rs.getInt("made_by"), rs.getInt("year_made"));
-//                bookList.add(dbBook);
-//            }
-//        }catch(SQLException e){
-//            e.printStackTrace();
-//        }
-//        return bookList;
-//    }
-//    public List<Book> queryPaintingBeforeYear(int year) {
-//        List<Book> bookList = new ArrayList<>();
-//        try{
-//            PreparedStatement ps = conn.prepareStatement("select * from painting where year_made < ?");
-//            ps.setInt(1, year);
-//            ResultSet rs = ps.executeQuery();
-//            while(rs.next()){
-//                Book dbBook = new Book(rs.getInt("painting_id"), rs.getString("title"),
-//                        rs.getInt("made_by"), rs.getInt("year_made"));
-//                bookList.add(dbBook);
-//            }
-//        }catch(SQLException e){
-//            e.printStackTrace();
-//        }
-//        return bookList;
-//    }
 }

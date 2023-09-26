@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.sql.Connection;
-import java.util.List;
 
 public class BookDAOTest {
     Connection conn;
@@ -40,6 +39,9 @@ public class BookDAOTest {
         Assert.assertEquals(expectedTitle, actualBook.getTitle());
     }
 
+    /**
+     * Tests interaction with the bookDAO when user successfully signs out a book.
+     */
     @Test
     public void testSignOutBook() {
         User user = new User(22, "testname");
@@ -47,13 +49,16 @@ public class BookDAOTest {
 
         Book testBook = new Book(43, "test author", "test title", 22);
         bookDAO.insertBook(testBook);
-        bookDAO.updateSignedOutBy(testBook.getBookId(), testBook.getSignedOutBy());
+        bookDAO.updateSignedOutBy(testBook, testBook.getSignedOutBy());
         Book actualBook = bookDAO.queryBooksByAuthor("test author").get(0);
         int expected = 22;
         int actual = actualBook.getSignedOutBy();
         Assert.assertEquals(expected, actual);
     }
 
+    /**
+     * Tests interaction with the bookDAO when user successfully returns a book.
+     */
     @Test
     public void testReturnBook() {
         User user = new User(25, "testuser");
@@ -61,40 +66,10 @@ public class BookDAOTest {
 
         Book testBook = new Book(45, "test author", "test title", 25);
         bookDAO.insertBook(testBook);
-        bookDAO.updateReturnBook(testBook.getBookId());
+        bookDAO.updateReturnBook(testBook);
         Book actualBook = bookDAO.queryBooksByAuthor("test author").get(0);
         int expected = 0;
         int actual = actualBook.getSignedOutBy();
         Assert.assertEquals(expected, actual);
     }
-
-
-
-
-    /**
-     * test that all painting that are retrieved are from the expected year.
-     */
-//    @Test
-//    public void testGetByYear(){
-
-//        List<Painting> actual = paintingDAO.queryPaintingByYear(1880);
-//        int expectedYear = 1880;
-//        for(int i = 0 ; i < actual.size() ; i++){
-//            Assert.assertEquals(expectedYear, actual.get(i).getYearMade());
-//        }
-
-//    }
-
-    /**
-     * test that no paintings that are retrieved are from an unexpected year.
-     */
-//    @Test
-//    public void testGetByYearNotRetrieveUnexpectedYear(){
-
-//        List<Painting> actual = paintingDAO.queryPaintingByYear(1880);
-//        int expectedYear = 1890;
-//        for(int i = 0 ; i < actual.size() ; i++){
-//            Assert.assertNotEquals(expectedYear, actual.get(i).getYearMade());
-//        }
-//    }
 }

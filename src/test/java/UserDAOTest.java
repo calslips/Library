@@ -56,7 +56,7 @@ public class UserDAOTest {
 
         userDAO.createUser(user);
         bookDAO.insertBook(testBook);
-        bookDAO.updateSignedOutBy(testBook.getBookId(), user.getUserId());
+        bookDAO.updateSignedOutBy(testBook, user.getUserId());
 
         Assert.assertThrows(UserHasBooksSignedOut.class, () -> {
             userService.deleteUser(user.getUserId());

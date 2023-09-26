@@ -28,8 +28,7 @@ public class Controller {
         app.get("users", this::getAllUsersHandler);
         app.post("books", this::postBooksHandler);
         app.post("users", this::postUsersHandler);
-        app.put("books/{id}/signoutbook", this::putSignoutBooksHandler);
-        app.put("books/{id}/returnbook", this::putReturnBooksHandler);
+        app.patch("books/{id}", this::patchBookSignedOutBy);
         app.delete("users/{id}", this::deleteUserHandler);
         return app;
     }
@@ -80,12 +79,20 @@ public class Controller {
         }
     }
 
-    private void putSignoutBooksHandler(Context context) {
+    /**
+     * This is handler updates the signedOutBy property of the book
+     * if the current user has the book signed out, they will return it
+     * if the book is not currently signed out, the current user will sign it out
+     * if the book is signed out by another user, a BookSignedOutException will be thrown/caught
+     * @param context
+     */
+    private void patchBookSignedOutBy(Context context) {
         try {
             User user = om.readValue(context.body(), User.class);
             int userId = user.getUserId();
             int bookId = Integer.parseInt(context.pathParam("id"));
-            bookService.signOutBook(bookId, userId);
+            Book updatedBook = bookService.updateBookSignedOutBy(bookId, userId);
+            context.json(updatedBook);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             context.status(400);
@@ -93,11 +100,6 @@ public class Controller {
             e.printStackTrace();
             context.status(400);
         }
-    }
-
-    private void putReturnBooksHandler(Context context) {
-        int bookId = Integer.parseInt(context.pathParam("id"));
-        bookService.returnBook(bookId);
     }
 
     /**

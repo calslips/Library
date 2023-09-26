@@ -7,7 +7,7 @@ import Model.Book;
 import java.util.List;
 
 /**
- * Service used for CRUD operations on paintings
+ * Service used for CRUD operations on books
  * Create Read Update Delete
  * (ie, an application that doesn't require any complicated programming logic - just a path from user input to data layer)
  */
@@ -66,42 +66,45 @@ public class BookService {
         return bookList;
     }
 
-    public void signOutBook(int bookId, int userId) throws BookSignedOutException{
-        if (isSignedOut(bookId)) {
-            throw new BookSignedOutException();
+    /**
+     * Intermediary method determining how to update book's signedOutBy property.
+     * When user has already signed out book, will call method to return book.
+     * When book is not currently signed out, will call method to sign book out.
+     * When book is currently signed out by another user, will throw exception.
+     * @param bookId
+     * @param userId
+     */
+    public Book updateBookSignedOutBy(int bookId, int userId) throws BookSignedOutException {
+        Book bookToUpdate = bookDAO.queryBooksById(bookId);
+
+        if (bookToUpdate.getSignedOutBy() == userId) {
+            return returnBook(bookToUpdate);
+        } else if (bookToUpdate.getSignedOutBy() == 0) {
+            return signOutBook(bookToUpdate, userId);
         } else {
-            bookDAO.updateSignedOutBy(bookId, userId);
+            throw new BookSignedOutException();
         }
     }
 
-    public boolean isSignedOut(int bookId) {
-        Book b = bookDAO.queryBooksById(bookId);
-        return b.getSignedOutBy() != 0;
+    /**
+     * Makes call to bookDAO to update book's signedOutBy property to current user
+     * @param book
+     * @param userId
+     */
+    public Book signOutBook(Book book, int userId) {
+        return bookDAO.updateSignedOutBy(book, userId);
     }
 
-    public void returnBook(int bookId) {
-        bookDAO.updateReturnBook(bookId);
+    /**
+     * Makes call to bookDAO to update book's signedOutBy property to null (no user)
+     * @param book
+     */
+    public Book returnBook(Book book) {
+        return bookDAO.updateReturnBook(book);
     }
 
     public List<Book> getAllBooks(){
         List<Book> bookList = bookDAO.queryAllBooks();
         return bookList;
     }
-
-//    public void updatePainting(Book p){
-//        paintingDAO.updatePainting(p);
-//    }
-//
-//    public void deletePainting(String title){
-//        paintingDAO.deletePainting(title);
-//    }
-//
-//    public List<Book> getPaintingsFromYear(int year){
-//        return paintingDAO.queryPaintingByYear(year);
-//    }
-//
-//    public List<Book> getPaintingsBeforeYear(int year){
-//        return paintingDAO.queryPaintingBeforeYear(year);
-//    }
-
 }
