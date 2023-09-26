@@ -56,9 +56,9 @@ public class BookDAOTest {
      */
     @Test
     public void testSearchAllBooksNotEmpty() {
-        bookService.addBook(new Book("author1", "title1"));
-        bookService.addBook(new Book("author2", "title2"));
-        bookService.addBook(new Book("author3", "title3"));
+        bookDAO.insertBook(new Book(1, "author1", "title1"));
+        bookDAO.insertBook(new Book(2, "author2", "title2"));
+        bookDAO.insertBook(new Book(3, "author3", "title3"));
         List<Book> allBooks = bookDAO.queryAllBooks();
         int expectedLength = 3;
         Assert.assertEquals(expectedLength, allBooks.size());
@@ -117,6 +117,34 @@ public class BookDAOTest {
         int expected = 22;
         int actual = actualBook.getSignedOutBy();
         Assert.assertEquals(expected, actual);
+    }
+
+    /**
+     * Tests querying the database for books signed out by the current user
+     */
+    @Test
+    public void testSearchBooksSignedOutByUser() {
+        User user = new User(35, "testada");
+        userDAO.createUser(user);
+
+        Book b1 = bookDAO.insertBook(new Book(654, "test auth 213", "test title 213"));
+        Book b2 = bookDAO.insertBook(new Book(645, "test auth 213", "test title 213"));
+        Book b3 = bookDAO.insertBook(new Book(564, "test auth 543", "test title 543"));
+        Book b4 = bookDAO.insertBook(new Book(546, "test auth 765", "test title 765"));
+        Book b5 = bookDAO.insertBook(new Book(456, "test auth 987", "test title 987"));
+        Book b6 = bookDAO.insertBook(new Book(465, "test auth 143", "test title 143"));
+
+        bookDAO.updateSignedOutBy(b1, user.getUserId());
+        bookDAO.updateSignedOutBy(b2, user.getUserId());
+        bookDAO.updateSignedOutBy(b3, user.getUserId());
+
+        List<Book> allBooks = bookDAO.queryAllBooks();
+        List<Book> booksSignedOutByUser = bookDAO.queryBooksSignedOutByUser(user.getUserId());
+        int expectedLengthAllBooks = 6;
+        int expectedLengthSignedOutByUser = 3;
+
+        Assert.assertEquals(expectedLengthAllBooks, allBooks.size());
+        Assert.assertEquals(expectedLengthSignedOutByUser, booksSignedOutByUser.size());
     }
 
     /**
