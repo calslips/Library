@@ -81,7 +81,7 @@ public class Book extends Object{
         return "Book{" +
                 "bookId=" + bookId +
                 ", title='" + title + '\'' +
-                ", author=" + author +
+                ", author='" + author + '\'' +
                 ", signedOutBy=" + signedOutBy +
                 '}';
     }
