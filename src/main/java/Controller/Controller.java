@@ -60,8 +60,7 @@ public class Controller {
         ObjectMapper om = new ObjectMapper();
         try {
             Book b = om.readValue(context.body(), Book.class);
-            bookService.addBook(b);
-            context.status(201);
+            context.json(bookService.addBook(b));
         }catch(JsonProcessingException e){
             e.printStackTrace();
             context.status(400);

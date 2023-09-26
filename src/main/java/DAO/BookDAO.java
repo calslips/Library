@@ -26,22 +26,22 @@ public class BookDAO {
     }
 
     /**
-     * method that uses JDBC to send a insert statement to my database
-     * @param b
+     * method that uses JDBC to insert a book into the database
+     * @param book
      */
-    public void insertBook(Book b){
+    public Book insertBook(Book book){
         try{
-//            using preparedstatement's ? ? syntax prevents SQL injection
             PreparedStatement ps = conn.prepareStatement("insert into books (bookId, author, title, signedOutBy) values (?, ?, ?, null)");
-            ps.setInt(1, b.getBookId());
-            ps.setString(2, b.getAuthor());
-            ps.setString(3, b.getTitle());
-//            ps.setNull(4, null);
-            ps.executeUpdate();
-
+            ps.setInt(1, book.getBookId());
+            ps.setString(2, book.getAuthor());
+            ps.setString(3, book.getTitle());
+            if (ps.executeUpdate() > 0) {
+                return book;
+            }
         }catch(SQLException e){
             e.printStackTrace();
         }
+        return null;
     }
 
     /**

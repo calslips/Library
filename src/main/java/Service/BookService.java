@@ -22,33 +22,20 @@ public class BookService {
 
     /**
      * save the book (duplicates are not an issue).
-     * @param b
+     * @param book
      */
-    public void addBook(Book b) {
+    public Book addBook(Book book) {
         int id = 0;
 
         // if book id is the default (0), replace it with a unique randomized id
-        if (b.getBookId() == id) {
+        if (book.getBookId() == id) {
             do {
                 id = (int) (Math.random() * Integer.MAX_VALUE);
             } while (bookDAO.queryBooksById(id) != null);
 
-            b.setBookId(id);
+            book.setBookId(id);
         }
-        bookDAO.insertBook(b);
-
-//        int authorId = authorService.getIdFromName(name);
-//        i need to check if the painting already exists if i try to save it.
-//        Book dbBook = paintingDAO.queryPaintingsByTitleAndAuthor(p.getTitle(), authorId);
-//        if it's null, i assume it doesn't exist, and i proceed with the insert.
-//        if (dbBook == null) {
-////            set the fkey that we just found by name for inserting the painting
-//            p.setAuthorFkey(authorId);
-//            paintingDAO.insertPainting(p);
-//        }else{
-////            if it does exist, throw an exception to the user input layer so it may inform the user.
-//            throw new PaintingAlreadyExistsException();
-//        }
+        return bookDAO.insertBook(book);
     }
 
     public List<Book> getBooksByTitleAndAuthor(String title, String author){
