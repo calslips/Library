@@ -34,28 +34,55 @@ public class UserDAO {
         return null;
     }
 
-    /**
-     * method deletes user from database using their unique username
-     * @param username
-     */
-    public void deleteUser(String username) {
-        try {
-            PreparedStatement ps = conn.prepareStatement("delete from users where username = ?");
-            ps.setString(1, username);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+//    /**
+//     * method deletes user from database using their unique username
+//     * @param username
+//     */
+//    public User deleteUser(String username) {
+//        try {
+//            PreparedStatement ps = conn.prepareStatement("delete from users where username = ?");
+//            ps.setString(1, username);
+//            ps.executeUpdate();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
-    public void deleteUser(int userId) {
+    /**
+     * method deletes user from the database
+     * @param user
+     * @return user or null
+     */
+    public User deleteUser(User user) {
         try {
             PreparedStatement ps = conn.prepareStatement("delete from users where userId = ?");
-            ps.setInt(1, userId);
-            ps.executeUpdate();
+            ps.setInt(1, user.getUserId());
+            if (ps.executeUpdate() == 1) {
+                return user;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return null;
+    }
+
+    /**
+     * retrieves specified user by their unique id
+     * @param userId
+     * @return user or null
+     */
+    public User getUserById(int userId) {
+        try {
+            PreparedStatement ps = conn.prepareStatement("select * from users where userId = ?");
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return new User(rs.getInt("userId"), rs.getString("username"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public Boolean userExists(String username) {

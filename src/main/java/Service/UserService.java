@@ -39,15 +39,24 @@ public class UserService {
 //    }
 
     /**
-     * method calls DAO to delete user from database IF they do not have any books signed out
-     * otherwise throws exception
-     * @param userId
+     * Method calls DAO to delete user from database.
+     * If current user credentials match user to delete, delete user from db, IF they do not have any books signed out.
+     * Otherwise, throws exception if the user has books signed out.
+     * If current user credentials do not match user to delete, perform no action and return null.
+     * @param currentUserId
+     * @param userToDeleteId
+     * @return user or null
      */
-    public void deleteUser(int userId) throws UserHasBooksSignedOut {
-        if (!hasBooksSignedOut(userId)) {
-            userDAO.deleteUser(userId);
+    public User deleteUser(int currentUserId, int userToDeleteId) throws UserHasBooksSignedOut {
+        if (currentUserId == userToDeleteId) {
+            User userToDelete = userDAO.getUserById(userToDeleteId);
+            if (!hasBooksSignedOut(userToDeleteId)) {
+                return userDAO.deleteUser(userToDelete);
+            } else {
+                throw new UserHasBooksSignedOut();
+            }
         } else {
-            throw new UserHasBooksSignedOut();
+            return null;
         }
     }
 

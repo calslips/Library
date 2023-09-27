@@ -117,8 +117,17 @@ public class Controller {
      * */
     private void deleteUserHandler(Context context) {
         try {
-            int userId = Integer.parseInt(context.pathParam("id"));
-            userService.deleteUser(userId);
+            User currentUser = om.readValue(context.body(), User.class);
+            int deleteUserId = Integer.parseInt(context.pathParam("id"));
+            User deletedUser = userService.deleteUser(currentUser.getUserId(), deleteUserId);
+            if (deletedUser == null) {
+                context.status(401);
+            } else {
+                context.json(deletedUser);
+            }
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            context.status(400);
         } catch (UserHasBooksSignedOut e) {
             e.printStackTrace();
             context.status(400);
