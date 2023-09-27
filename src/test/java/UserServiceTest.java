@@ -92,4 +92,38 @@ public class UserServiceTest {
         Mockito.doThrow(UserHasBooksSignedOut.class).when(mockBookDAO).queryBooksSignedOutByUser(testUser.getUserId());
         Assert.assertThrows(UserHasBooksSignedOut.class, () -> mockUserService.deleteUser(51, 51));
     }
+
+    /**
+     * Tests that a user successfully deletes their account
+     */
+    @Test
+    public void testDeleteUserSucceedsUnmocked() {
+        User user = new User(543, "deleteMeTest");
+
+        realUserService.createUser(user);
+
+        User deleteAttempt = realUserService.deleteUser(user.getUserId(), user.getUserId());
+        Boolean userStillExists = realUserService.checkUser(user.getUserId());
+
+        Assert.assertEquals(user, deleteAttempt);
+        Assert.assertFalse(userStillExists);
+    }
+
+    /**
+     * Tests that a user fails to delete another user
+     */
+    @Test
+    public void testDeleteUserFailsWhenCredentialsAreInvalidUnmocked() {
+        User currentUser = new User(97, "currentTestUser");
+        User otherUser = new User(79, "otherTestUser");
+
+        realUserService.createUser(currentUser);
+        realUserService.createUser(otherUser);
+
+        User deleteAttempt = realUserService.deleteUser(currentUser.getUserId(), otherUser.getUserId());
+        Boolean otherUserStillExists = realUserService.checkUser(otherUser.getUserId());
+
+        Assert.assertNull(deleteAttempt);
+        Assert.assertTrue(otherUserStillExists);
+    }
 }
