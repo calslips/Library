@@ -74,6 +74,10 @@ public class UserService {
         return userDAO.userExists(username);
     }
 
+    public boolean checkUser(int userId) {
+        return userDAO.userExists(userId);
+    }
+
     public List getAllUsers() {
         return userDAO.getAllUsers();
     }
