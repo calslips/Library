@@ -67,11 +67,21 @@ public class Controller {
         }
     }
 
+    /**
+     * This handler creates a new user.
+     * If the username is already in use, no user is created and responds with a status code 400.
+     * Otherwise, the user is created and user info is contained in the response.
+     * @param context
+     */
     private void postUsersHandler(Context context){
         try {
             User user = om.readValue(context.body(), User.class);
-            userService.createUser(user);
-            context.status(201);
+            User createdUser = userService.createUser(user);
+            if (createdUser == null) {
+                context.status(400);
+            } else {
+                context.json(createdUser);
+            }
         }catch(JsonProcessingException e){
             e.printStackTrace();
             context.status(400);

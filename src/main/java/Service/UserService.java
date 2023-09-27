@@ -18,18 +18,20 @@ public class UserService {
 //        return authorDAO.getAuthorIdByName(name);
 //    }
 
-    public void createUser(User user) {
+    public User createUser(User user) {
         int id = 0;
 
-        // if user id is the default (0), replace it with a unique randomized id
-        if (user.getUserId() == id) {
+        if (userDAO.userExists(user.getUsername())) {
+            return null;
+            // if user id is the default (0), replace it with a unique randomized id
+        } else if (user.getUserId() == id) {
             do {
                 id = (int) (Math.random() * Integer.MAX_VALUE);
             } while (userDAO.userExists(id));
 
             user.setUserId(id);
         }
-        userDAO.createUser(user);
+        return userDAO.createUser(user);
     }
 
 //    public void deleteUser(String username) {

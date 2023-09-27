@@ -20,15 +20,18 @@ public class UserDAO {
      * method creates a new user record in the database based off of user object
      * @param user
      */
-    public void createUser(User user) {
+    public User createUser(User user) {
         try {
             PreparedStatement ps = conn.prepareStatement("insert into users (userId, username) values (?, ?)");
             ps.setInt(1, user.getUserId());
             ps.setString(2, user.getUsername());
-            ps.executeUpdate();
+            if (ps.executeUpdate() == 1) {
+                return user;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     /**
