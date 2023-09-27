@@ -1,6 +1,5 @@
 import DAO.BookDAO;
 import DAO.UserDAO;
-import Exceptions.BookSignedOutException;
 import Exceptions.UserHasBooksSignedOut;
 import Model.Book;
 import Model.User;
@@ -10,9 +9,7 @@ import Util.ConnectionSingleton;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.stubbing.Answer;
 
 import java.sql.Connection;
 
@@ -46,20 +43,35 @@ public class UserServiceTest {
      * the userService SHOULD allow us to create a user via the userDAO
      */
     @Test
-    public void createUserSuccesfulTestMocked () {
+    public void createUserSuccessfulTestMocked () {
         User testUser = new User(29, "testerino");
 
-        // createUser method has a void return
-        // utilize doAnswer to mock the method call but return null
-        Mockito.doAnswer(invocationOnMock -> {
-            Object arg0 = invocationOnMock.getArgument(0);
-            Assert.assertEquals(testUser, arg0);
-            return null;
-        }).when(mockUserDAO).createUser(Mockito.any(User.class));
+//        // createUser method has a void return
+//        // utilize doAnswer to mock the method call but return null
+//        Mockito.doAnswer(invocationOnMock -> {
+//            Object arg0 = invocationOnMock.getArgument(0);
+//            Assert.assertEquals(testUser, arg0);
+//            return null;
+//        }).when(mockUserDAO).createUser(Mockito.any(User.class));
 
         mockUserService.createUser(testUser);
 
         Mockito.verify(mockUserDAO).createUser(Mockito.any());
+    }
+
+    /**
+     * the userService should NOT create a user if username is already in use
+     */
+    @Test
+    public void createUserUnsuccessfulTestUnmocked () {
+        User testUser1 = new User(29, "testortle");
+        User testUser2 = new User(30, "testortle");
+
+        User createdUser = realUserService.createUser(testUser1);
+        User notCreatedUser = realUserService.createUser(testUser2);
+
+        Assert.assertEquals(testUser1, createdUser);
+        Assert.assertNull(notCreatedUser);
     }
 
     /**
