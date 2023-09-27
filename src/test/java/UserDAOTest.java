@@ -41,7 +41,7 @@ public class UserDAOTest {
     public void testDeleteUser() {
         User user = new User(12, "testname");
         userDAO.createUser(user);
-        userDAO.deleteUser(user.getUsername());
+        userDAO.deleteUser(user);
         Assert.assertFalse(userService.checkUser("testname"));
     }
 
@@ -59,7 +59,7 @@ public class UserDAOTest {
         bookDAO.updateSignedOutBy(testBook, user.getUserId());
 
         Assert.assertThrows(UserHasBooksSignedOut.class, () -> {
-            userService.deleteUser(user.getUserId());
+            userService.deleteUser(user.getUserId(), user.getUserId());
         });
     }
 }

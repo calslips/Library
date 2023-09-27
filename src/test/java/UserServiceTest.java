@@ -90,6 +90,6 @@ public class UserServiceTest {
         Mockito.verify(mockBookDAO).insertBook(Mockito.any(Book.class));
 
         Mockito.doThrow(UserHasBooksSignedOut.class).when(mockBookDAO).queryBooksSignedOutByUser(testUser.getUserId());
-        Assert.assertThrows(UserHasBooksSignedOut.class, () -> mockUserService.deleteUser(51));
+        Assert.assertThrows(UserHasBooksSignedOut.class, () -> mockUserService.deleteUser(51, 51));
     }
 }
