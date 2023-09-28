@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.sql.Connection;
+import java.util.List;
 
 public class BookServiceTest {
     Connection conn;
@@ -36,7 +37,7 @@ public class BookServiceTest {
     }
 
     /**
-     * the bookService SHOULD allow us to save a book via the bookDAO
+     * The bookService SHOULD allow us to save a book via the bookDAO
      */
     @Test
     public void addBookSuccessfulTestMocked () {
@@ -45,6 +46,38 @@ public class BookServiceTest {
         mockBookService.addBook(testBook);
 
         Mockito.verify(mockBookDAO).insertBook(Mockito.any());
+    }
+
+    /**
+     * The bookService should allow us to save a book and ignore title/author casing
+     */
+    @Test
+    public void addBookIgnoreCaseTestUnmocked() {
+        Book testBook = new Book("AutHoR TeSt CasE", "TitLe tEst cASe");
+        realBookService.addBook(testBook);
+        List<Book> allBooks = realBookService.getAllBooks();
+        String expectedAuthor = "author test case";
+        String expectedTitle = "title test case";
+        int expectedLength = 1;
+        Assert.assertEquals(expectedAuthor, allBooks.get(0).getAuthor());
+        Assert.assertEquals(expectedTitle, allBooks.get(0).getTitle());
+        Assert.assertEquals(expectedLength, allBooks.size());
+    }
+
+    /**
+     * The bookService should allow us to remove the whitespace padding from title and/or author before saving a book.
+     */
+    @Test
+    public void addBookRemoveWhitespacePaddingFromTitleAndAuthorUnmocked() {
+        Book testBook = new Book("   padded author   ", "   padded title   ");
+        realBookService.addBook(testBook);
+        List<Book> allBooks = realBookService.getAllBooks();
+        String expectedAuthor = "padded author";
+        String expectedTitle = "padded title";
+        int expectedLength = 1;
+        Assert.assertEquals(expectedAuthor, allBooks.get(0).getAuthor());
+        Assert.assertEquals(expectedTitle, allBooks.get(0).getTitle());
+        Assert.assertEquals(expectedLength, allBooks.size());
     }
 
     /**
