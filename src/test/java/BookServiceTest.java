@@ -9,17 +9,13 @@ import Util.ConnectionSingleton;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.Rule;
-import org.junit.rules.ExpectedException;
 import org.mockito.Mockito;
 
 import java.sql.Connection;
 
 public class BookServiceTest {
     Connection conn;
-    UserDAO mockUserDAO;
     BookDAO mockBookDAO;
-    UserService mockUserService;
     BookService mockBookService;
     UserDAO realUserDAO;
     BookDAO realBookDAO;
@@ -30,9 +26,6 @@ public class BookServiceTest {
     public void setUp(){
         mockBookDAO = Mockito.mock(BookDAO.class);
         mockBookService = new BookService(mockBookDAO);
-
-//        mockUserDAO = Mockito.mock(UserDAO.class);
-//        mockUserService = Mockito.mock(UserService.class);
 
         conn = ConnectionSingleton.getConnection();
         ConnectionSingleton.resetTestDatabase();
@@ -49,14 +42,6 @@ public class BookServiceTest {
     public void addBookSuccessfulTestMocked () {
         Book testBook = new Book(1, "testAuthor", "testBook", 0);
 
-//        // insertBook method has a void return
-//        // utilize doAnswer to mock the method call but return null
-//        Mockito.doAnswer(invocationOnMock -> {
-//            Object arg0 = invocationOnMock.getArgument(0);
-//            Assert.assertEquals(testBook, arg0);
-//            return null;
-//        }).when(mockBookDAO).insertBook(Mockito.any(Book.class));
-
         mockBookService.addBook(testBook);
 
         Mockito.verify(mockBookDAO).insertBook(Mockito.any());
@@ -68,6 +53,19 @@ public class BookServiceTest {
     @Test
     public void addBookUnsuccessfulWithoutTitleTestMocked () {
         Book testBook = new Book("Au Thor", "");
+        Book notAdded = mockBookService.addBook(testBook);
+
+        Assert.assertNull(notAdded);
+
+        Mockito.verify(mockBookDAO, Mockito.times(0)).insertBook(Mockito.any());
+    }
+
+    /**
+     * Tests that bookService prevents the addition of a new book if the title is all whitespace.
+     */
+    @Test
+    public void addBookUnsuccessfulWithWhitespaceTitleTestMocked () {
+        Book testBook = new Book("Au Thor", "     ");
         Book notAdded = mockBookService.addBook(testBook);
 
         Assert.assertNull(notAdded);
@@ -89,11 +87,37 @@ public class BookServiceTest {
     }
 
     /**
+     * Tests that bookService prevents the addition of a new book if the author is all whitespace.
+     */
+    @Test
+    public void addBookUnsuccessfulWithWhitespaceAuthorTestMocked () {
+        Book testBook = new Book("     ", "Space Author Useless Title");
+        Book notAdded = mockBookService.addBook(testBook);
+
+        Assert.assertNull(notAdded);
+
+        Mockito.verify(mockBookDAO, Mockito.times(0)).insertBook(Mockito.any());
+    }
+
+    /**
      * Tests that bookService prevents the addition of a new book if title and author is not included.
      */
     @Test
     public void addBookUnsuccessfulWithoutTitleAndAuthorTestMocked () {
         Book testBook = new Book("", "");
+        Book notAdded = mockBookService.addBook(testBook);
+
+        Assert.assertNull(notAdded);
+
+        Mockito.verify(mockBookDAO, Mockito.times(0)).insertBook(Mockito.any());
+    }
+
+    /**
+     * Tests that bookService prevents the addition of a new book if title and author are all whitespace.
+     */
+    @Test
+    public void addBookUnsuccessfulWithWhitespaceTitleAndAuthorTestMocked () {
+        Book testBook = new Book("     ", "          ");
         Book notAdded = mockBookService.addBook(testBook);
 
         Assert.assertNull(notAdded);
