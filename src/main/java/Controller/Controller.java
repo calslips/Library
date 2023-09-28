@@ -34,12 +34,14 @@ public class Controller {
     }
 
     /**
-     * This is an example handler for an example endpoint.
+     * GET request handler for all books.
+     * Can narrow search by both author and title or either value, received via query parameters.
+     * Search values 'sanitized' by removing beginning/end whitespace and lower-casing letters.
      * @param context The Javalin Context object manages information about both the HTTP request and response.
      */
     private void getAllBooksHandler(Context context) {
-        String title = context.queryParam("title");
-        String author = context.queryParam("author");
+        String title = context.queryParam("title").trim().toLowerCase();
+        String author = context.queryParam("author").trim().toLowerCase();
 
         if (title != null && author != null) {
             context.json(bookService.getBooksByTitleAndAuthor(title, author));
