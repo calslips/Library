@@ -14,11 +14,20 @@ public class UserService {
         this.userDAO = userDAO;
         this.bookDAO = bookDAO;
     }
-//    public int getIdFromName(String name){
-//        return authorDAO.getAuthorIdByName(name);
-//    }
 
+    /**
+     * Saves the user to the database.
+     * Returns null if username is empty, as it is an invalid input.
+     * Generates randomized unique id for the user.
+     * Lower-cases username prior to saving user.
+     * @param user
+     * @return user or null
+     */
     public User createUser(User user) {
+        if (user.getUsername().isBlank()) {
+            return null;
+        }
+
         int id = 0;
 
         if (userDAO.userExists(user.getUsername())) {
@@ -31,6 +40,9 @@ public class UserService {
 
             user.setUserId(id);
         }
+
+        user.setUsername(user.getUsername().toLowerCase());
+
         return userDAO.createUser(user);
     }
 

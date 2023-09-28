@@ -80,7 +80,8 @@ public class Controller {
 
     /**
      * This handler creates a new user.
-     * If the username is already in use, no user is created and responds with a status code 400.
+     * If the username is already in use or invalid username is provided,
+     * no user is created and responds with a status code 400.
      * Otherwise, the user is created and user info is contained in the response.
      * @param context
      */
