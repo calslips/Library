@@ -43,16 +43,8 @@ public class UserServiceTest {
      * the userService SHOULD allow us to create a user via the userDAO
      */
     @Test
-    public void createUserSuccessfulTestMocked () {
+    public void createUserSuccessfulTestMocked() {
         User testUser = new User(29, "testerino");
-
-//        // createUser method has a void return
-//        // utilize doAnswer to mock the method call but return null
-//        Mockito.doAnswer(invocationOnMock -> {
-//            Object arg0 = invocationOnMock.getArgument(0);
-//            Assert.assertEquals(testUser, arg0);
-//            return null;
-//        }).when(mockUserDAO).createUser(Mockito.any(User.class));
 
         mockUserService.createUser(testUser);
 
@@ -60,10 +52,36 @@ public class UserServiceTest {
     }
 
     /**
+     * the userService should NOT create a user if username is empty
+     */
+    @Test
+    public void createUserUnsuccessfulUsernameEmptyTestMocked() {
+        User testUser = new User(729, "");
+        User notCreatedUser = mockUserService.createUser(testUser);
+
+        Assert.assertNull(notCreatedUser);
+
+        Mockito.verify(mockUserDAO, Mockito.times(0)).createUser(Mockito.any());
+    }
+
+    /**
+     * the userService should NOT create a user if username is all whitespace
+     */
+    @Test
+    public void createUserUnsuccessfulUsernameAllWhitespaceTestMocked() {
+        User testUser = new User(927, "     ");
+        User notCreatedUser = mockUserService.createUser(testUser);
+
+        Assert.assertNull(notCreatedUser);
+
+        Mockito.verify(mockUserDAO, Mockito.times(0)).createUser(Mockito.any());
+    }
+
+    /**
      * the userService should NOT create a user if username is already in use
      */
     @Test
-    public void createUserUnsuccessfulTestUnmocked () {
+    public void createUserUnsuccessfulUsernameInUseTestUnmocked() {
         User testUser1 = new User(29, "testortle");
         User testUser2 = new User(30, "testortle");
 
