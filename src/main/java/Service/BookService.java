@@ -21,10 +21,18 @@ public class BookService {
     }
 
     /**
-     * save the book (duplicates are not an issue).
+     * Saves the book to the database (duplicates are not an issue).
+     * Returns null if either the book title or author are empty, as they are invalid inputs.
+     * Generates randomized unique id for the book.
+     * Title and author are 'sanitized' by removing leading and trailing white space, as well as lower-casing inputs.
      * @param book
+     * @return book or null
      */
     public Book addBook(Book book) {
+        if (book.getTitle().isBlank() || book.getAuthor().isBlank()) {
+            return null;
+        }
+
         int id = 0;
 
         // if book id is the default (0), replace it with a unique randomized id
@@ -35,6 +43,10 @@ public class BookService {
 
             book.setBookId(id);
         }
+
+        book.setTitle(book.getTitle().trim().toLowerCase());
+        book.setAuthor(book.getAuthor().trim().toLowerCase());
+
         return bookDAO.insertBook(book);
     }
 

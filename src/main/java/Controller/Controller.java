@@ -56,11 +56,22 @@ public class Controller {
         context.json(userService.getAllUsers());
     }
 
+    /**
+     * POST request handler for creating a book resource.
+     * If the book is invalid (null) responds with a status code 400.
+     * Otherwise, responds with the book in JSON format.
+     * @param context
+     */
     private void postBooksHandler(Context context){
         ObjectMapper om = new ObjectMapper();
         try {
             Book b = om.readValue(context.body(), Book.class);
-            context.json(bookService.addBook(b));
+            Book addedBook = bookService.addBook(b);
+            if (addedBook == null) {
+                context.status(400);
+            } else {
+                context.json(addedBook);
+            }
         }catch(JsonProcessingException e){
             e.printStackTrace();
             context.status(400);
