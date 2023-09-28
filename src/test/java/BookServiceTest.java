@@ -46,7 +46,7 @@ public class BookServiceTest {
      * the bookService SHOULD allow us to save a book via the bookDAO
      */
     @Test
-    public void addBookSuccesfulTestMocked () {
+    public void addBookSuccessfulTestMocked () {
         Book testBook = new Book(1, "testAuthor", "testBook", 0);
 
 //        // insertBook method has a void return
@@ -60,6 +60,45 @@ public class BookServiceTest {
         mockBookService.addBook(testBook);
 
         Mockito.verify(mockBookDAO).insertBook(Mockito.any());
+    }
+
+    /**
+     * Tests that bookService prevents the addition of a new book if the title is not included.
+     */
+    @Test
+    public void addBookUnsuccessfulWithoutTitleTestMocked () {
+        Book testBook = new Book("Au Thor", "");
+        Book notAdded = mockBookService.addBook(testBook);
+
+        Assert.assertNull(notAdded);
+
+        Mockito.verify(mockBookDAO, Mockito.times(0)).insertBook(Mockito.any());
+    }
+
+    /**
+     * Tests that bookService prevents the addition of a new book if the author is not included.
+     */
+    @Test
+    public void addBookUnsuccessfulWithoutAuthorTestMocked () {
+        Book testBook = new Book("", "No Author Useless Title");
+        Book notAdded = mockBookService.addBook(testBook);
+
+        Assert.assertNull(notAdded);
+
+        Mockito.verify(mockBookDAO, Mockito.times(0)).insertBook(Mockito.any());
+    }
+
+    /**
+     * Tests that bookService prevents the addition of a new book if title and author is not included.
+     */
+    @Test
+    public void addBookUnsuccessfulWithoutTitleAndAuthorTestMocked () {
+        Book testBook = new Book("", "");
+        Book notAdded = mockBookService.addBook(testBook);
+
+        Assert.assertNull(notAdded);
+
+        Mockito.verify(mockBookDAO, Mockito.times(0)).insertBook(Mockito.any());
     }
 
     /**
