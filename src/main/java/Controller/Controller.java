@@ -45,11 +45,15 @@ public class Controller {
         String author = context.queryParam("author");
 
         if (title != null && author != null) {
-            context.json(bookService.getBooksByTitleAndAuthor(title.trim().toLowerCase(), author.trim().toLowerCase()));
+            title = title.trim().toLowerCase();
+            author = author.trim().toLowerCase();
+            context.json(bookService.getBooksByTitleAndAuthor(title, author));
         } else if (title != null) {
-            context.json(bookService.getBooksByTitle(title.trim().toLowerCase()));
+            title = title.trim().toLowerCase();
+            context.json(bookService.getBooksByTitle(title));
         } else if (author != null) {
-            context.json(bookService.getBooksByAuthor(author.trim().toLowerCase()));
+            author = author.trim().toLowerCase();
+            context.json(bookService.getBooksByAuthor(author));
         } else {
             context.json(bookService.getAllBooks());
         }
