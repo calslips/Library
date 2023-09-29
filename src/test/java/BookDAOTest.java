@@ -42,7 +42,7 @@ public class BookDAOTest {
     }
 
     /**
-     * Tests querying all books in the database
+     * Tests querying all books in the database when it is empty
      */
     @Test
     public void testSearchAllBooksEmpty() {
@@ -52,7 +52,7 @@ public class BookDAOTest {
     }
 
     /**
-     * Tests querying all books in the database
+     * Tests querying all books in the database when it contains books
      */
     @Test
     public void testSearchAllBooksNotEmpty() {
