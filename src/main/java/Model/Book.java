@@ -3,7 +3,6 @@ package Model;
 import java.util.Objects;
 
 public class Book extends Object{
-   // static int nextId = 1;
     private int bookId;
     private String title;
     private String author;
@@ -12,10 +11,7 @@ public class Book extends Object{
     public Book(){
     }
 
-
-
     public Book(String author, String title){
-       // bookId = Book.nextId++;
         this.author = author;
         this.title = title;
         signedOutBy = 0;
@@ -67,15 +63,6 @@ public class Book extends Object{
         this.signedOutBy = userId;
     }
 
-
-//    public int getYearMade() {
-//        return yearMade;
-//    }
-
-//    public void setYearMade(int yearMade) {
-//        this.yearMade = yearMade;
-//    }
-
     @Override
     public String toString() {
         return "Book{" +
@@ -93,8 +80,8 @@ public class Book extends Object{
         Book book = (Book) o;
         return bookId == book.bookId &&
                 Objects.equals(author, book.author) &&
-                Objects.equals(title, book.title);
-//                && signedOutBy == book.signedOutBy;
+                Objects.equals(title, book.title) &&
+                signedOutBy == book.signedOutBy;
     }
 
     @Override
