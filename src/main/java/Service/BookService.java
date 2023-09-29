@@ -94,6 +94,16 @@ public class BookService {
     }
 
     /**
+     * Makes call to bookDAO to retrieve a single book by its id if it exists, null otherwise.
+     * @param bookId
+     * @return book or null
+     */
+    public Book getBookById(int bookId){
+        Book book = bookDAO.queryBooksById(bookId);
+        return book;
+    }
+
+    /**
      * Intermediary method determining how to update book's signedOutBy property.
      * When user has already signed out book, will call method to return book.
      * When book is not currently signed out, will call method to sign book out.
@@ -128,15 +138,5 @@ public class BookService {
      */
     public Book returnBook(Book book) {
         return bookDAO.updateReturnBook(book);
-    }
-
-    /**
-     * Makes call to bookDAO to retrieve a single book by its id if it exists, null otherwise.
-     * @param bookId
-     * @return book or null
-     */
-    public Book getBookById(int bookId){
-        Book book = bookDAO.queryBooksById(bookId);
-        return book;
     }
 }
