@@ -103,33 +103,6 @@ public class BookDAOTest {
     }
 
     /**
-     * Tests querying the database for book by their id via bookDAO
-     */
-    @Test
-    public void testSearchBookById() {
-        Book expectedBook = bookDAO.insertBook(new Book(8675309, "test author 4.5", "test title 4.5"));
-        Book actualBook = bookDAO.queryBooksById(expectedBook.getBookId());
-        Assert.assertEquals(expectedBook, actualBook);
-    }
-
-    /**
-     * Tests interaction with the bookDAO when user successfully signs out a book.
-     */
-    @Test
-    public void testSignOutBook() {
-        User user = new User(22, "testname");
-        userDAO.createUser(user);
-
-        Book testBook = new Book(43, "test author 5", "test title 5", 22);
-        bookDAO.insertBook(testBook);
-        bookDAO.updateSignedOutBy(testBook, testBook.getSignedOutBy());
-        Book actualBook = bookDAO.queryBooksByAuthor("test author 5").get(0);
-        int expected = 22;
-        int actual = actualBook.getSignedOutBy();
-        Assert.assertEquals(expected, actual);
-    }
-
-    /**
      * Tests querying the database for books signed out by the current user
      */
     @Test
@@ -155,6 +128,33 @@ public class BookDAOTest {
 
         Assert.assertEquals(expectedLengthAllBooks, allBooks.size());
         Assert.assertEquals(expectedLengthSignedOutByUser, booksSignedOutByUser.size());
+    }
+
+    /**
+     * Tests querying the database for book by their id via bookDAO
+     */
+    @Test
+    public void testSearchBookById() {
+        Book expectedBook = bookDAO.insertBook(new Book(8675309, "test author 4.5", "test title 4.5"));
+        Book actualBook = bookDAO.queryBooksById(expectedBook.getBookId());
+        Assert.assertEquals(expectedBook, actualBook);
+    }
+
+    /**
+     * Tests interaction with the bookDAO when user successfully signs out a book.
+     */
+    @Test
+    public void testSignOutBook() {
+        User user = new User(22, "testname");
+        userDAO.createUser(user);
+
+        Book testBook = new Book(43, "test author 5", "test title 5", 22);
+        bookDAO.insertBook(testBook);
+        bookDAO.updateSignedOutBy(testBook, testBook.getSignedOutBy());
+        Book actualBook = bookDAO.queryBooksByAuthor("test author 5").get(0);
+        int expected = 22;
+        int actual = actualBook.getSignedOutBy();
+        Assert.assertEquals(expected, actual);
     }
 
     /**
