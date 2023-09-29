@@ -12,6 +12,8 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserServiceTest {
     Connection conn;
@@ -40,19 +42,22 @@ public class UserServiceTest {
     }
 
     /**
-     * the userService SHOULD allow us to create a user via the userDAO
+     * Tests that the userService allows us to create a user via the userDAO.
      */
     @Test
     public void createUserSuccessfulTestMocked() {
         User testUser = new User(29, "testerino");
 
-        mockUserService.createUser(testUser);
+        Mockito.when(mockUserDAO.createUser(testUser)).thenReturn(testUser);
 
-        Mockito.verify(mockUserDAO).createUser(Mockito.any());
+        User createdTestUser = mockUserService.createUser(testUser);
+
+        Assert.assertEquals(testUser, createdTestUser);
+        Mockito.verify(mockUserDAO).createUser(testUser);
     }
 
     /**
-     * the userService should NOT create a user if username is empty
+     * Tests that the userService does not create a user if the input username is empty.
      */
     @Test
     public void createUserUnsuccessfulUsernameEmptyTestMocked() {
@@ -65,7 +70,7 @@ public class UserServiceTest {
     }
 
     /**
-     * the userService should NOT create a user if username is all whitespace
+     * Tests that the userService does not create a user if the input username is all whitespace.
      */
     @Test
     public void createUserUnsuccessfulUsernameAllWhitespaceTestMocked() {
@@ -78,7 +83,7 @@ public class UserServiceTest {
     }
 
     /**
-     * the userService should NOT create a user if username is already in use
+     * Tests that the userService does not create a user if the input username is already in use.
      */
     @Test
     public void createUserUnsuccessfulUsernameInUseTestUnmocked() {
@@ -93,26 +98,120 @@ public class UserServiceTest {
     }
 
     /**
-     * the userService should throw an exception when the user attempts to delete their account
-     * when they have books signed out
-     * @throws Exceptions.UserHasBooksSignedOut
+     * Tests that the userService interacts with the DAO to retrieve all users.
      */
     @Test
-    public void signOutBookUnsuccessfulTestMocked() throws UserHasBooksSignedOut {
-        Book testBook = new Book(75, "testAuthor", "testTitle");
-        User testUser = new User(51, "stillGotBooks");
+    public void getAllUsersTestMocked() {
+        List<User> expectedUsers = new ArrayList<>();
+        for (int i = 1; i < 6; i++) {
+            User user = new User(i, "user" + i);
+            expectedUsers.add(user);
+        }
+        Mockito.when(mockUserDAO.getAllUsers()).thenReturn(expectedUsers);
+        List<User> actualUsers = mockUserService.getAllUsers();
 
-        mockUserDAO.createUser(testUser);
-        mockBookDAO.insertBook(testBook);
-        Mockito.verify(mockUserDAO).createUser(Mockito.any(User.class));
-        Mockito.verify(mockBookDAO).insertBook(Mockito.any(Book.class));
-
-        Mockito.doThrow(UserHasBooksSignedOut.class).when(mockBookDAO).queryBooksSignedOutByUser(testUser.getUserId());
-        Assert.assertThrows(UserHasBooksSignedOut.class, () -> mockUserService.deleteUser(51, 51));
+        Assert.assertEquals(expectedUsers, actualUsers);
+        Mockito.verify(mockUserDAO).getAllUsers();
     }
 
     /**
-     * Tests that a user successfully deletes their account
+     * Tests that the userService interacts with the book DAO to determine that
+     * a user has books signed out.
+     */
+    @Test
+    public void testUserHasBooksSignedOutMocked() {
+        User user = new User(432, "idohavebooks");
+        List<Book> booksSignedOut = new ArrayList<>();
+        for (int i = 1; i < 6; i++) {
+            Book book = new Book(i, "author" + i, "title" + i, 432);
+            booksSignedOut.add(book);
+        }
+
+        Mockito.when(mockBookDAO.queryBooksSignedOutByUser(432)).thenReturn(booksSignedOut);
+        boolean hasBooks = mockUserService.hasBooksSignedOut(432);
+
+        Assert.assertTrue(hasBooks);
+        Mockito.verify(mockBookDAO).queryBooksSignedOutByUser(432);
+    }
+
+    /**
+     * Tests that the userService interacts with the book DAO to determine that
+     * a user does not have books signed out.
+     */
+    @Test
+    public void testUserDoesNotHaveBooksSignedOutMocked() {
+        User user = new User(678, "ihavenobooks");
+        List<Book> booksSignedOut = new ArrayList<>();
+
+        Mockito.when(mockBookDAO.queryBooksSignedOutByUser(678)).thenReturn(booksSignedOut);
+        boolean hasBooks = mockUserService.hasBooksSignedOut(678);
+
+        Assert.assertFalse(hasBooks);
+        Mockito.verify(mockBookDAO).queryBooksSignedOutByUser(678);
+    }
+
+    /**
+     * Tests that the userService interacts with the user DAO to determine that
+     * a user exists based on the input username.
+     */
+    @Test
+    public void testUserExistsByUsernameMocked() {
+        User existingUser = new User(5432, "iexist!");
+
+        Mockito.when(mockUserDAO.userExists(existingUser.getUsername())).thenReturn(true);
+        boolean userFound = mockUserService.checkUser(existingUser.getUsername());
+
+        Assert.assertTrue(userFound);
+        Mockito.verify(mockUserDAO).userExists("iexist!");
+    }
+
+    /**
+     * Tests that the userService interacts with the user DAO to determine that
+     * a user exists based on the input username.
+     */
+    @Test
+    public void testUserDoesNotExistByUsernameMocked() {
+        User nonexistingUser = new User(2345, "idontexist");
+
+        Mockito.when(mockUserDAO.userExists(nonexistingUser.getUsername())).thenReturn(false);
+        boolean userFound = mockUserService.checkUser(nonexistingUser.getUsername());
+
+        Assert.assertFalse(userFound);
+        Mockito.verify(mockUserDAO).userExists("idontexist");
+    }
+
+    /**
+     * Tests that the userService interacts with the user DAO to determine that
+     * a user exists based on the input user id.
+     */
+    @Test
+    public void testUserExistsByIdMocked() {
+        User existingUser = new User(5432, "iexist!");
+
+        Mockito.when(mockUserDAO.userExists(existingUser.getUserId())).thenReturn(true);
+        boolean userFound = mockUserService.checkUser(existingUser.getUserId());
+
+        Assert.assertTrue(userFound);
+        Mockito.verify(mockUserDAO).userExists(5432);
+    }
+
+    /**
+     * Tests that the userService interacts with the user DAO to determine that
+     * a user exists based on the input username.
+     */
+    @Test
+    public void testUserDoesNotExistByIdMocked() {
+        User nonexistingUser = new User(2345, "idontexist");
+
+        Mockito.when(mockUserDAO.userExists(nonexistingUser.getUserId())).thenReturn(false);
+        boolean userFound = mockUserService.checkUser(nonexistingUser.getUserId());
+
+        Assert.assertFalse(userFound);
+        Mockito.verify(mockUserDAO).userExists(2345);
+    }
+
+    /**
+     * Tests that a user successfully deletes their account.
      */
     @Test
     public void testDeleteUserSucceedsUnmocked() {
@@ -143,5 +242,24 @@ public class UserServiceTest {
 
         Assert.assertNull(deleteAttempt);
         Assert.assertTrue(otherUserStillExists);
+    }
+
+    /**
+     * Tests that the userService throws an exception when the user attempts to delete their account
+     * when they have books signed out.
+     * @throws Exceptions.UserHasBooksSignedOut
+     */
+    @Test
+    public void testDeleteUserUnsuccessfulTestMocked() throws UserHasBooksSignedOut {
+        Book testBook = new Book(75, "testAuthor", "testTitle");
+        User testUser = new User(51, "stillGotBooks");
+
+        mockUserService.createUser(testUser);
+        mockBookService.addBook(testBook);
+        Mockito.verify(mockUserDAO).createUser(testUser);
+        Mockito.verify(mockBookDAO).insertBook(testBook);
+
+        Mockito.doThrow(UserHasBooksSignedOut.class).when(mockBookDAO).queryBooksSignedOutByUser(testUser.getUserId());
+        Assert.assertThrows(UserHasBooksSignedOut.class, () -> mockUserService.deleteUser(51, 51));
     }
 }
