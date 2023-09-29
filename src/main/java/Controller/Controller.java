@@ -72,6 +72,7 @@ public class Controller {
             if (addedBook == null) {
                 context.status(400);
             } else {
+                context.status(201);
                 context.json(addedBook);
             }
         }catch(JsonProcessingException e){
@@ -94,6 +95,7 @@ public class Controller {
             if (createdUser == null) {
                 context.status(400);
             } else {
+                context.status(201);
                 context.json(createdUser);
             }
         }catch(JsonProcessingException e){
