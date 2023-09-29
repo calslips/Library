@@ -141,6 +141,17 @@ public class BookDAOTest {
     }
 
     /**
+     * Tests querying the database for book by their id via bookDAO,
+     * returns null when there is no match.
+     */
+    @Test
+    public void testSearchBookByIdFail() {
+        Book existingBook = bookDAO.insertBook(new Book(8675309, "test author 4.5", "test title 4.5"));
+        Book nonexistentBook = bookDAO.queryBooksById(existingBook.getBookId() - 1);
+        Assert.assertNull(nonexistentBook);
+    }
+
+    /**
      * Tests interaction with the bookDAO when user successfully signs out a book.
      */
     @Test
