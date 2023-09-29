@@ -230,7 +230,7 @@ public class BookDAO {
         try{
             PreparedStatement ps = conn.prepareStatement("update books set signedOutBy = null where bookId = ?");
             ps.setInt(1, book.getBookId());
-            if (ps.executeUpdate() > 1) {
+            if (ps.executeUpdate() > 0) {
                 book.setSignedOutBy(0);
                 return book;
             }
