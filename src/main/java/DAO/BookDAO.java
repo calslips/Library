@@ -217,12 +217,17 @@ public class BookDAO {
         return bookList;
     }
 
+    /**
+     * method that uses JDBC to retrieve a book from the database by its id and return it or null if no book is found.
+     * @param bookId
+     * @return book or null
+     */
     public Book queryBooksById(int bookId){
         try{
             PreparedStatement ps = conn.prepareStatement("select * from books where bookId = ?");
             ps.setInt(1, bookId);
             ResultSet rs = ps.executeQuery();
-            while(rs.next()){
+            if (rs.next()){
                 int dbBookId = rs.getInt("bookId");
                 String dbAuthor = rs.getString("author");
                 String dbTitle = rs.getString("title");

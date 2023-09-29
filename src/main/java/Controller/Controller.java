@@ -25,6 +25,7 @@ public class Controller {
     public Javalin getAPI() {
         Javalin app = Javalin.create();
         app.get("books", this::getAllBooksHandler);
+        app.get("books/{id}", this::getBookByIdHandler);
         app.get("users", this::getAllUsersHandler);
         app.post("books", this::postBooksHandler);
         app.post("users", this::postUsersHandler);
@@ -51,6 +52,21 @@ public class Controller {
             context.json(bookService.getBooksByAuthor(author.trim().toLowerCase()));
         } else {
             context.json(bookService.getAllBooks());
+        }
+    }
+
+    /**
+     * GET request handler for a single book by its id.
+     * @param context
+     */
+    private void getBookByIdHandler(Context context) {
+        int bookId = Integer.parseInt(context.pathParam("id"));
+        Book book = bookService.getBookById(bookId);
+
+        if (book == null) {
+            context.status(404);
+        } else {
+            context.json(book);
         }
     }
 

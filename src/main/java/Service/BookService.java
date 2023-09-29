@@ -106,4 +106,14 @@ public class BookService {
         List<Book> bookList = bookDAO.queryAllBooks();
         return bookList;
     }
+
+    /**
+     * Makes call to bookDAO to retrieve a single book by its id if it exists, null otherwise.
+     * @param bookId
+     * @return book or null
+     */
+    public Book getBookById(int bookId){
+        Book book = bookDAO.queryBooksById(bookId);
+        return book;
+    }
 }
