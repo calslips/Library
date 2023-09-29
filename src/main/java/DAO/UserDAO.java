@@ -1,6 +1,5 @@
 package DAO;
 
-import Model.Book;
 import Model.User;
 
 import java.sql.Connection;
@@ -17,7 +16,7 @@ public class UserDAO {
     }
 
     /**
-     * method creates a new user record in the database based off of user object
+     * Method creates a new user record in the database based off of the input user object.
      * @param user
      */
     public User createUser(User user) {
@@ -34,85 +33,11 @@ public class UserDAO {
         return null;
     }
 
-//    /**
-//     * method deletes user from database using their unique username
-//     * @param username
-//     */
-//    public User deleteUser(String username) {
-//        try {
-//            PreparedStatement ps = conn.prepareStatement("delete from users where username = ?");
-//            ps.setString(1, username);
-//            ps.executeUpdate();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
     /**
-     * method deletes user from the database
-     * @param user
-     * @return user or null
+     * Method retrieves all users from the database.
+     * If there are no users, the returned list will be empty.
+     * @return list of users
      */
-    public User deleteUser(User user) {
-        try {
-            PreparedStatement ps = conn.prepareStatement("delete from users where userId = ?");
-            ps.setInt(1, user.getUserId());
-            if (ps.executeUpdate() == 1) {
-                return user;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    /**
-     * retrieves specified user by their unique id
-     * @param userId
-     * @return user or null
-     */
-    public User getUserById(int userId) {
-        try {
-            PreparedStatement ps = conn.prepareStatement("select * from users where userId = ?");
-            ps.setInt(1, userId);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return new User(rs.getInt("userId"), rs.getString("username"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public Boolean userExists(String username) {
-        try {
-            PreparedStatement ps = conn.prepareStatement("select * from users where username = ?");
-            ps.setString(1, username);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return true;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    public Boolean userExists(int userId) {
-        try {
-            PreparedStatement ps = conn.prepareStatement("select * from users where userId = ?");
-            ps.setInt(1, userId);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return true;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
     public List getAllUsers() {
         List<User> userList = new ArrayList<>();
         try{
@@ -131,21 +56,78 @@ public class UserDAO {
         return userList;
     }
 
-//    /**
-//     * method that retrieves an author's id based off of their name. If no author is found, return 0.
-//     */
-//    public int getAuthorIdByName(String name){
-//        try{
-//            PreparedStatement ps = conn.prepareStatement("select author_id from author where author.name = ?");
-//            ps.setString(1, name);
-//            ResultSet rs = ps.executeQuery();
-//            if(rs.next()){
-//                int id = rs.getInt("author_id");
-//                return id;
-//            }
-//        }catch(SQLException e){
-//            e.printStackTrace();
-//        }
-//        return 0;
-//    }
+    /**
+     * Method retrieves a specified user from the database by their unique id.
+     * @param userId
+     * @return user or null
+     */
+    public User getUserById(int userId) {
+        try {
+            PreparedStatement ps = conn.prepareStatement("select * from users where userId = ?");
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return new User(rs.getInt("userId"), rs.getString("username"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * Method verifies whether a user exists within the database based on the input username.
+     * @param username
+     * @return boolean
+     */
+    public Boolean userExists(String username) {
+        try {
+            PreparedStatement ps = conn.prepareStatement("select * from users where username = ?");
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * Method verifies whether a user exists within the database based on the input user id.
+     * @param userId
+     * @return boolean
+     */
+    public Boolean userExists(int userId) {
+        try {
+            PreparedStatement ps = conn.prepareStatement("select * from users where userId = ?");
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * Method deletes specific user record from the database based off the input user's id.
+     * @param user
+     * @return user or null
+     */
+    public User deleteUser(User user) {
+        try {
+            PreparedStatement ps = conn.prepareStatement("delete from users where userId = ?");
+            ps.setInt(1, user.getUserId());
+            if (ps.executeUpdate() == 1) {
+                return user;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

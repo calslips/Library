@@ -31,6 +31,9 @@ public class UserDAOTest {
         userService = new UserService(userDAO, bookDAO);
     }
 
+    /**
+     * Tests that a new user can be added to the database.
+     */
     @Test
     public void testCreateUser() {
         User user = new User(18, "testname");
@@ -78,7 +81,7 @@ public class UserDAOTest {
     }
 
     /**
-     * Tests that the existence of a user can be validated by their username
+     * Tests that the existence of a user can be validated by their username.
      */
     @Test
     public void testUserExistsByUsername() {
@@ -88,7 +91,7 @@ public class UserDAOTest {
     }
 
     /**
-     * Tests that the existence of a user can be invalidated by their username
+     * Tests that the existence of a user can be invalidated by their username.
      */
     @Test
     public void testUserDoesNotExistByUsername() {
@@ -96,7 +99,7 @@ public class UserDAOTest {
     }
 
     /**
-     * Tests that the existence of a user can be validated by their id
+     * Tests that the existence of a user can be validated by their id.
      */
     @Test
     public void testUserExistsById() {
@@ -106,13 +109,17 @@ public class UserDAOTest {
     }
 
     /**
-     * Tests that the existence of a user can be invalidated by their id
+     * Tests that the existence of a user can be invalidated by their id.
      */
     @Test
     public void testUserDoesNotExistById() {
         Assert.assertFalse(userDAO.userExists(9000));
     }
 
+    /**
+     * Tests a user can delete their own account from the database.
+     * @throws UserHasBooksSignedOut
+     */
     @Test
     public void testDeleteUser() {
         User user = new User(12, "testname");
@@ -122,7 +129,7 @@ public class UserDAOTest {
     }
 
     /**
-     * test when user tries to delete their account with books signed out, exception is thrown
+     * Tests that when a user tries to delete their account with books signed out, an exception is thrown.
      * @throws UserHasBooksSignedOut
      */
     @Test
