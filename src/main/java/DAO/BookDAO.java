@@ -9,14 +9,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Data access object
- * meaning : a style of object intended to contain methods that interact with a database, and, it manages the
- * conversion from database records to/from java objects
- *
- * A DAO should not contain programming logic that isn't database-related. The methods also shouldn't make more than
- * one database statement/query. That should be left to service classes.
- */
 public class BookDAO {
 
     private Connection conn;
@@ -26,7 +18,7 @@ public class BookDAO {
     }
 
     /**
-     * method that uses JDBC to insert a book into the database
+     * Method that uses JDBC to insert a book into the database.
      * @param book
      */
     public Book insertBook(Book book){
@@ -45,10 +37,36 @@ public class BookDAO {
     }
 
     /**
-     * method that uses JDBC to parse the resultset of a query that selects books with a matching title and author
-     * into a java arraylist, and returns it
+     * Method that uses JDBC to parse the resultset of a query that selects all books,
+     * places each book into a java array list, and returns the list.
+     * @return list of books
+     */
+    public List<Book> queryAllBooks(){
+        List<Book> bookList = new ArrayList<>();
+        try{
+            PreparedStatement ps = conn.prepareStatement("select * from books");
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                int dbBookId = rs.getInt("bookId");
+                String dbAuthor = rs.getString("author");
+                String dbTitle = rs.getString("title");
+                int dbSignedOutBy = rs.getInt("signedOutBy");
+
+                Book dbBook = new Book(dbBookId, dbAuthor, dbTitle, dbSignedOutBy);
+                bookList.add(dbBook);
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return bookList;
+    }
+
+    /**
+     * Method that uses JDBC to parse the resultset of a query that selects books with matching title and author,
+     * places each book into a java array list, and returns the list.
+     * @param title
      * @param author
-     * @return
+     * @return list of books
      */
     public List<Book> queryBooksByTitleAndAuthor(String title, String author){
         List<Book> bookList = new ArrayList<>();
@@ -73,10 +91,10 @@ public class BookDAO {
     }
 
     /**
-     * method that uses JDBC to parse the resultset of a query that selects books with a matching author
-     * into a java arraylist, and returns it
+     * Method that uses JDBC to parse the resultset of a query that selects books with a matching author,
+     * places each book into a java array list, and returns the list.
      * @param author
-     * @return
+     * @return list of books
      */
     public List<Book> queryBooksByAuthor(String author){
         List<Book> bookList = new ArrayList<>();
@@ -100,10 +118,10 @@ public class BookDAO {
     }
 
     /**
-     * method that uses JDBC to parse the resultset of a query that selects books with a matching title
-     * into a java arraylist, and returns it
+     * method that uses JDBC to parse the resultset of a query that selects books with a matching title,
+     * places each book into a java array list, and returns the list.
      * @param title
-     * @return
+     * @return list of books
      */
     public List<Book> queryBooksByTitle(String title){
         List<Book> bookList = new ArrayList<>();
@@ -126,6 +144,12 @@ public class BookDAO {
         return bookList;
     }
 
+    /**
+     * Method that uses JDBC to parse the resultset of a query that selects books signed out by a specific user,
+     * places each book into a java array list, and returns the list.
+     * @param userId
+     * @return list of books
+     */
     public List<Book> queryBooksSignedOutByUser(int userId) {
         List<Book> bookList = new ArrayList<>();
         try{
@@ -145,6 +169,31 @@ public class BookDAO {
             e.printStackTrace();
         }
         return bookList;
+    }
+
+    /**
+     * Method that uses JDBC to retrieve a book from the database by its id and return it, or null if no book is found.
+     * @param bookId
+     * @return book or null
+     */
+    public Book queryBooksById(int bookId){
+        try{
+            PreparedStatement ps = conn.prepareStatement("select * from books where bookId = ?");
+            ps.setInt(1, bookId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()){
+                int dbBookId = rs.getInt("bookId");
+                String dbAuthor = rs.getString("author");
+                String dbTitle = rs.getString("title");
+                int dbSignedOutBy = rs.getInt("signedOutBy");
+
+                Book dbBook = new Book(dbBookId, dbAuthor, dbTitle, dbSignedOutBy);
+                return dbBook;
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
@@ -184,57 +233,6 @@ public class BookDAO {
             if (ps.executeUpdate() > 1) {
                 book.setSignedOutBy(0);
                 return book;
-            }
-        }catch(SQLException e){
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    /**
-     * method that uses JDBC to parse the resultset of a query that selects all books
-     * into a java arraylist, and returns it
-     * @param
-     * @return
-     */
-    public List<Book> queryAllBooks(){
-        List<Book> bookList = new ArrayList<>();
-        try{
-            PreparedStatement ps = conn.prepareStatement("select * from books");
-            ResultSet rs = ps.executeQuery();
-            while(rs.next()){
-                int dbBookId = rs.getInt("bookId");
-                String dbAuthor = rs.getString("author");
-                String dbTitle = rs.getString("title");
-                int dbSignedOutBy = rs.getInt("signedOutBy");
-
-                Book dbBook = new Book(dbBookId, dbAuthor, dbTitle, dbSignedOutBy);
-                bookList.add(dbBook);
-            }
-        }catch(SQLException e){
-            e.printStackTrace();
-        }
-        return bookList;
-    }
-
-    /**
-     * method that uses JDBC to retrieve a book from the database by its id and return it or null if no book is found.
-     * @param bookId
-     * @return book or null
-     */
-    public Book queryBooksById(int bookId){
-        try{
-            PreparedStatement ps = conn.prepareStatement("select * from books where bookId = ?");
-            ps.setInt(1, bookId);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()){
-                int dbBookId = rs.getInt("bookId");
-                String dbAuthor = rs.getString("author");
-                String dbTitle = rs.getString("title");
-                int dbSignedOutBy = rs.getInt("signedOutBy");
-
-                Book dbBook = new Book(dbBookId, dbAuthor, dbTitle, dbSignedOutBy);
-                return dbBook;
             }
         }catch(SQLException e){
             e.printStackTrace();
