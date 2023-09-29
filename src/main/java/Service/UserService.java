@@ -46,9 +46,40 @@ public class UserService {
         return userDAO.createUser(user);
     }
 
-//    public void deleteUser(String username) {
-//        userDAO.deleteUser(username);
-//    }
+    /**
+     * Method calls DAO to retrieve a list of all users in the database.
+     */
+    public List getAllUsers() {
+        return userDAO.getAllUsers();
+    }
+
+    /**
+     * Method verifies whether user has books signed out.
+     * @param userId
+     * @return boolean
+     */
+    public boolean hasBooksSignedOut(int userId) {
+        List<Book> books = bookDAO.queryBooksSignedOutByUser(userId);
+        return books.size() > 0;
+    }
+
+    /**
+     * Method verifies whether user is in the database based on the input username
+     * @param username
+     * @return boolean
+     */
+    public boolean checkUser(String username) {
+        return userDAO.userExists(username);
+    }
+
+    /**
+     * Method verifies whether user is in the database based on the input user id
+     * @param userId
+     * @return boolean
+     */
+    public boolean checkUser(int userId) {
+        return userDAO.userExists(userId);
+    }
 
     /**
      * Method calls DAO to delete user from database.
@@ -71,27 +102,4 @@ public class UserService {
             return null;
         }
     }
-
-    /**
-     * method verifies whether user has books signed out
-     * @param userId
-     * @return boolean
-     */
-    public boolean hasBooksSignedOut(int userId) {
-        List<Book> books = bookDAO.queryBooksSignedOutByUser(userId);
-        return books.size() > 0;
-    }
-
-    public boolean checkUser(String username) {
-        return userDAO.userExists(username);
-    }
-
-    public boolean checkUser(int userId) {
-        return userDAO.userExists(userId);
-    }
-
-    public List getAllUsers() {
-        return userDAO.getAllUsers();
-    }
-
 }
