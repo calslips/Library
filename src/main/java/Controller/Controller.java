@@ -40,15 +40,15 @@ public class Controller {
      * @param context The Javalin Context object manages information about both the HTTP request and response.
      */
     private void getAllBooksHandler(Context context) {
-        String title = context.queryParam("title").trim().toLowerCase();
-        String author = context.queryParam("author").trim().toLowerCase();
+        String title = context.queryParam("title");
+        String author = context.queryParam("author");
 
         if (title != null && author != null) {
-            context.json(bookService.getBooksByTitleAndAuthor(title, author));
+            context.json(bookService.getBooksByTitleAndAuthor(title.trim().toLowerCase(), author.trim().toLowerCase()));
         } else if (title != null) {
-            context.json(bookService.getBooksByTitle(title));
+            context.json(bookService.getBooksByTitle(title.trim().toLowerCase()));
         } else if (author != null) {
-            context.json(bookService.getBooksByAuthor(author));
+            context.json(bookService.getBooksByAuthor(author.trim().toLowerCase()));
         } else {
             context.json(bookService.getAllBooks());
         }
