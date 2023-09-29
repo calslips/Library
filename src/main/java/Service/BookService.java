@@ -50,16 +50,44 @@ public class BookService {
         return bookDAO.insertBook(book);
     }
 
+    /**
+     * Retrieves a list of all books contained in the database or an empty list if the database is empty.
+     * @return list of books
+     */
+    public List<Book> getAllBooks(){
+        List<Book> bookList = bookDAO.queryAllBooks();
+        return bookList;
+    }
+
+    /**
+     * Retrieves a list of books from the database that match both title and author.
+     * If there are no matches, the returned list will be empty.
+     * @param title
+     * @param author
+     * @return list of books
+     */
     public List<Book> getBooksByTitleAndAuthor(String title, String author){
         List<Book> bookList = bookDAO.queryBooksByTitleAndAuthor(title, author);
         return bookList;
     }
 
+    /**
+     * Retrieves a list of books from the database that match the input author.
+     * If there are no matches, the returned list will be empty.
+     * @param author
+     * @return list of books
+     */
     public List<Book> getBooksByAuthor(String author){
         List<Book> bookList = bookDAO.queryBooksByAuthor(author);
         return bookList;
     }
 
+    /**
+     * Retrieves a list of books from the database that match the input title.
+     * If there are no matches, the returned list will be empty.
+     * @param title
+     * @return list of books
+     */
     public List<Book> getBooksByTitle(String title){
         List<Book> bookList = bookDAO.queryBooksByTitle(title);
         return bookList;
@@ -100,11 +128,6 @@ public class BookService {
      */
     public Book returnBook(Book book) {
         return bookDAO.updateReturnBook(book);
-    }
-
-    public List<Book> getAllBooks(){
-        List<Book> bookList = bookDAO.queryAllBooks();
-        return bookList;
     }
 
     /**
