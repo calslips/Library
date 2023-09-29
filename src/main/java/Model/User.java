@@ -3,17 +3,13 @@ package Model;
 import java.util.Objects;
 
 public class User {
-  //  static int nextId = 1;
     private int userId;
     private String username;
-//    private int yearBorn;
-//    private String authorNationality;
 
     public User(){
     }
 
     public User(String username) {
-     //   userId = User.nextId++;
         this.username = username;
     }
 
@@ -37,26 +33,6 @@ public class User {
     public void setUsername(String username) {
         this.username = username;
     }
-
-//    public void setName(String name) {
-//        this.name = name;
-//    }
-
-//    public int getYearBorn() {
-//        return yearBorn;
-//    }
-//
-//    public void setYearBorn(int yearBorn) {
-//        this.yearBorn = yearBorn;
-//    }
-//
-//    public String getAuthorNationality() {
-//        return authorNationality;
-//    }
-//
-//    public void setAuthorNationality(String authorNationality) {
-//        this.authorNationality = authorNationality;
-//    }
 
     @Override
     public boolean equals(Object o) {
