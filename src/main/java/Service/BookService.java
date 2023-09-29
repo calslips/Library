@@ -6,18 +6,11 @@ import Model.Book;
 
 import java.util.List;
 
-/**
- * Service used for CRUD operations on books
- * Create Read Update Delete
- * (ie, an application that doesn't require any complicated programming logic - just a path from user input to data layer)
- */
 public class BookService {
     private BookDAO bookDAO;
-    private UserService userService;
 
     public BookService(BookDAO bookDAO){
         this.bookDAO = bookDAO;
-        this.userService = userService;
     }
 
     /**
