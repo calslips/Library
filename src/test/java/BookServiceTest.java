@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.List;
 
 public class BookServiceTest {
@@ -43,9 +44,12 @@ public class BookServiceTest {
     public void addBookSuccessfulTestMocked () {
         Book testBook = new Book(1, "testAuthor", "testBook", 0);
 
-        mockBookService.addBook(testBook);
+        Mockito.when(mockBookDAO.insertBook(testBook)).thenReturn(testBook);
 
-        Mockito.verify(mockBookDAO).insertBook(Mockito.any());
+        Book addedTestBook = mockBookService.addBook(testBook);
+
+        Assert.assertEquals(testBook, addedTestBook);
+        Mockito.verify(mockBookDAO).insertBook(testBook);
     }
 
     /**
@@ -159,6 +163,149 @@ public class BookServiceTest {
     }
 
     /**
+     * Tests that the bookService interacts with the DAO to retrieve all books.
+     */
+    @Test
+    public void getAllBooksTestMocked() {
+        List<Book> expectedBooks = new ArrayList<>();
+        for (int i = 1; i < 6; i++) {
+            Book book = new Book(i, "author" + i, "title" + i);
+            expectedBooks.add(book);
+        }
+        Mockito.when(mockBookDAO.queryAllBooks()).thenReturn(expectedBooks);
+        List<Book> actualBooks = mockBookService.getAllBooks();
+
+        Assert.assertEquals(expectedBooks, actualBooks);
+        Mockito.verify(mockBookDAO).queryAllBooks();
+    }
+
+    /**
+     * Tests that the bookService interacts with the DAO to retrieve all books of the same author and title.
+     */
+    @Test
+    public void getAllBooksByTitleAndAuthorTestMocked() {
+        List<Book> allBooks = new ArrayList<>();
+        List<Book> expectedBooks = new ArrayList<>();
+        String expectedTitle = "title1";
+        String expectedAuthor = "author1";
+
+        for (int i = 1; i < 11; i++) {
+            Book book = new Book(i, "author" + i % 2, "title" + i % 4);
+            allBooks.add(book);
+        }
+        for (Book book : allBooks) {
+            if (book.getTitle().equals(expectedTitle) && book.getAuthor().equals(expectedAuthor)) {
+                expectedBooks.add(book);
+            }
+        }
+
+        Mockito.when(mockBookDAO.queryBooksByTitleAndAuthor(expectedTitle, expectedAuthor)).thenReturn(expectedBooks);
+        List<Book> actualBooks = mockBookService.getBooksByTitleAndAuthor("title1", "author1");
+
+        Assert.assertEquals(3, actualBooks.size());
+        Assert.assertEquals(expectedBooks, actualBooks);
+        Mockito.verify(mockBookDAO).queryBooksByTitleAndAuthor("title1", "author1");
+    }
+
+    /**
+     * Tests that the bookService interacts with the DAO to retrieve all books of the same author.
+     */
+    @Test
+    public void getAllBooksByAuthorTestMocked() {
+        List<Book> allBooks = new ArrayList<>();
+        List<Book> expectedBooks = new ArrayList<>();
+        String expectedAuthor = "author1";
+
+        for (int i = 1; i < 11; i++) {
+            Book book = new Book(i, "author" + i % 5, "title");
+            allBooks.add(book);
+        }
+        for (Book book : allBooks) {
+            if (book.getAuthor().equals(expectedAuthor)) {
+                expectedBooks.add(book);
+            }
+        }
+
+        Mockito.when(mockBookDAO.queryBooksByAuthor(expectedAuthor)).thenReturn(expectedBooks);
+        List<Book> actualBooks = mockBookService.getBooksByAuthor("author1");
+
+        Assert.assertEquals(2, actualBooks.size());
+        Assert.assertEquals(expectedBooks, actualBooks);
+        Mockito.verify(mockBookDAO).queryBooksByAuthor("author1");
+    }
+
+    /**
+     * Tests that the bookService interacts with the DAO to retrieve all books of the same title.
+     */
+    @Test
+    public void getAllBooksByTitleTestMocked() {
+        List<Book> allBooks = new ArrayList<>();
+        List<Book> expectedBooks = new ArrayList<>();
+        String expectedTitle = "title1";
+
+        for (int i = 1; i < 11; i++) {
+            Book book = new Book(i, "author", "title"  + i % 5);
+            allBooks.add(book);
+        }
+        for (Book book : allBooks) {
+            if (book.getTitle().equals(expectedTitle)) {
+                expectedBooks.add(book);
+            }
+        }
+
+        Mockito.when(mockBookDAO.queryBooksByTitle(expectedTitle)).thenReturn(expectedBooks);
+        List<Book> actualBooks = mockBookService.getBooksByTitle("title1");
+
+        Assert.assertEquals(2, actualBooks.size());
+        Assert.assertEquals(expectedBooks, actualBooks);
+        Mockito.verify(mockBookDAO).queryBooksByTitle("title1");
+    }
+
+    /**
+     * Tests that the bookService interacts with the DAO to retrieve a book by its id.
+     */
+    @Test
+    public void getBookByIdMocked() {
+        Book testBook = new Book(98657, "unknown", "the lost book");
+
+        Mockito.when(mockBookDAO.queryBooksById(testBook.getBookId())).thenReturn(testBook);
+        Book foundBook = mockBookService.getBookById(98657);
+
+        Assert.assertEquals(testBook, foundBook);
+        Mockito.verify(mockBookDAO).queryBooksById(98657);
+    }
+
+    /**
+     * Tests that the bookService interacts with the DAO to retrieve a book by its id,
+     * but returns null when there is no match.
+     */
+    @Test
+    public void getBookByIdFailMocked() {
+        Book testBook = new Book(43276, "off by 1 author", "off by 1 title");
+
+        Mockito.when(mockBookDAO.queryBooksById(testBook.getBookId() + 1)).thenReturn(null);
+        Book nonexistentBook = mockBookService.getBookById(43276 + 1);
+
+        Assert.assertNull(nonexistentBook);
+        Mockito.verify(mockBookDAO).queryBooksById(43276 + 1);
+    }
+
+    /**
+     * the bookService should allow a user to sign out a book when it is available.
+     */
+    @Test
+    public void signOutBookSuccessfulTestUnmocked() throws BookSignedOutException {
+        Book testBook = new Book("testAuthor444", "testTitle444");
+        User signedOutUser = new User("mybooknow");
+
+        realBookService.addBook(testBook);
+        realUserService.createUser(signedOutUser);
+        Book signedOutBook = realBookService.updateBookSignedOutBy(testBook.getBookId(), signedOutUser.getUserId());
+
+        Assert.assertEquals(signedOutUser.getUserId(), signedOutBook.getSignedOutBy());
+    }
+
+    /**
      * the bookService should throw a BookSignedOutException when the user attempts
      * to sign out a book that another user has already signed out
      */
@@ -176,5 +323,23 @@ public class BookServiceTest {
         Assert.assertThrows(BookSignedOutException.class, () -> {
             realBookService.updateBookSignedOutBy(testBook.getBookId(), notSignedOutUser.getUserId());
         });
+    }
+
+    /**
+     * the bookService should allow a user to return a book if they have it signed out.
+     */
+    @Test
+    public void returnBookSuccessfulTestUnmocked() throws BookSignedOutException {
+        Book testBook = new Book("testAuthorReturn", "testTitleReturn");
+        User testUser = new User("borrowtoreturn");
+
+        realBookService.addBook(testBook);
+        realUserService.createUser(testUser);
+
+        Book signedOutBook = realBookService.updateBookSignedOutBy(testBook.getBookId(), testUser.getUserId());
+        Assert.assertEquals(testUser.getUserId(), signedOutBook.getSignedOutBy());
+
+        Book returnedBook = realBookService.returnBook(signedOutBook);
+        Assert.assertEquals(0, returnedBook.getSignedOutBy());
     }
 }
