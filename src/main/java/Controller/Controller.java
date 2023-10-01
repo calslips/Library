@@ -61,6 +61,7 @@ public class Controller {
 
     /**
      * GET request handler for a single book by its id.
+     * If there is no book associated with the input id, responds with a Not Found status code.
      * @param context
      */
     private void getBookByIdHandler(Context context) {
