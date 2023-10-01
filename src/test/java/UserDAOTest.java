@@ -1,6 +1,5 @@
 import DAO.UserDAO;
 import DAO.BookDAO;
-import Exceptions.BookSignedOutException;
 import Exceptions.UserHasBooksSignedOut;
 import Model.User;
 import Model.Book;
