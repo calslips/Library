@@ -48,7 +48,7 @@ public class UserDAOTest {
         List<User> users = new ArrayList<>();
 
         for (int i = 1; i < 6; i++) {
-            User user = new User(i, i + "");
+            User user = new User(i, "" + i);
             users.add(user);
             userDAO.createUser(user);
         }
