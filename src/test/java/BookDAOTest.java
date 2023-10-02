@@ -69,8 +69,9 @@ public class BookDAOTest {
      */
     @Test
     public void testSearchBookByTitleAndAuthor() {
-        Book testBook = new Book("test author 2", "test title 2");
-        bookDAO.insertBook(testBook);
+        bookDAO.insertBook(new Book(1, "test author 1", "test title 1"));
+        bookDAO.insertBook(new Book(2, "test author 2", "test title 2"));
+        bookDAO.insertBook(new Book(3, "test author 3", "test title 3"));
         Book actualBook = bookDAO.queryBooksByTitleAndAuthor("test title 2", "test author 2").get(0);
         String expectedAuthor = "test author 2";
         String expectedTitle = "test title 2";
@@ -83,8 +84,9 @@ public class BookDAOTest {
      */
     @Test
     public void testSearchBookByAuthor() {
-        Book testBook = new Book("test author 3", "test title 3");
-        bookDAO.insertBook(testBook);
+        bookDAO.insertBook(new Book(1, "test author 1", "test title 1"));
+        bookDAO.insertBook(new Book(2, "test author 2", "test title 2"));
+        bookDAO.insertBook(new Book(3, "test author 3", "test title 3"));
         Book actualBook = bookDAO.queryBooksByAuthor("test author 3").get(0);
         String expectedAuthor = "test author 3";
         Assert.assertEquals(expectedAuthor, actualBook.getAuthor());
@@ -95,8 +97,10 @@ public class BookDAOTest {
      */
     @Test
     public void testSearchBookByTitle() {
-        Book testBook = new Book("test author 4", "test title 4");
-        bookDAO.insertBook(testBook);
+        bookDAO.insertBook(new Book(1, "test author 1", "test title 1"));
+        bookDAO.insertBook(new Book(2, "test author 2", "test title 2"));
+        bookDAO.insertBook(new Book(3, "test author 3", "test title 3"));
+        bookDAO.insertBook(new Book(4, "test author 4", "test title 4"));
         Book actualBook = bookDAO.queryBooksByTitle("test title 4").get(0);
         String expectedTitle = "test title 4";
         Assert.assertEquals(expectedTitle, actualBook.getTitle());
