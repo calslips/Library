@@ -127,7 +127,7 @@ public class UserServiceTest {
             booksSignedOut.add(book);
         }
 
-        Mockito.when(mockBookDAO.queryBooksSignedOutByUser(432)).thenReturn(booksSignedOut);
+        Mockito.when(mockBookDAO.queryBooksSignedOutByUser(user.getUserId())).thenReturn(booksSignedOut);
         boolean hasBooks = mockUserService.hasBooksSignedOut(432);
 
         Assert.assertTrue(hasBooks);
@@ -143,7 +143,7 @@ public class UserServiceTest {
         User user = new User(678, "ihavenobooks");
         List<Book> booksSignedOut = new ArrayList<>();
 
-        Mockito.when(mockBookDAO.queryBooksSignedOutByUser(678)).thenReturn(booksSignedOut);
+        Mockito.when(mockBookDAO.queryBooksSignedOutByUser(user.getUserId())).thenReturn(booksSignedOut);
         boolean hasBooks = mockUserService.hasBooksSignedOut(678);
 
         Assert.assertFalse(hasBooks);
